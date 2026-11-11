@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Campus Lost &amp; Found - Thapar Campus Registry</title>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <!-- Material Symbols Outlined -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Tailwind Theme Configuration -->
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-white": "#ffffff",
+                        "surface-container-low": "#eff4ff",
+                        "badge-lost-bg": "#ffe4e6",
+                        "inverse-on-surface": "#eaf1ff",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "badge-found-border": "#a7f3d0",
+                        "border-slate": "#e2e8f0",
+                        "surface-container-highest": "#d3e4fe",
+                        "on-error-container": "#93000a",
+                        "ink-muted": "#64748b",
+                        "on-secondary-container": "#586377",
+                        "inverse-surface": "#213145",
+                        "surface": "#f8f9ff",
+                        "on-surface-variant": "#464555",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "surface-bright": "#f8f9ff",
+                        "badge-claimed-bg": "#f1f5f9",
+                        "on-tertiary": "#ffffff",
+                        "tertiary": "#004d70",
+                        "outline": "#777587",
+                        "inverse-primary": "#c3c0ff",
+                        "badge-found-bg": "#d1fae5",
+                        "on-tertiary-fixed": "#001e2f",
+                        "ink-faint": "#94a3b8",
+                        "surface-tint": "#4d44e3",
+                        "surface-variant": "#d3e4fe",
+                        "secondary": "#545f73",
+                        "surface-container": "#e5eeff",
+                        "tertiary-container": "#006693",
+                        "surface-container-high": "#dce9ff",
+                        "tertiary-fixed-dim": "#89ceff",
+                        "badge-claimed-border": "#cbd5e1",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "primary-container": "#4f46e5",
+                        "tertiary-fixed": "#c9e6ff",
+                        "interactive-active": "#3730a3",
+                        "badge-claimed-text": "#475569",
+                        "on-tertiary-container": "#b8e0ff",
+                        "on-error": "#ffffff",
+                        "background": "#f8f9ff",
+                        "on-tertiary-fixed-variant": "#004c6e",
+                        "on-primary-fixed": "#0f0069",
+                        "border-slate-subtle": "#f1f5f9",
+                        "badge-lost-border": "#fecdd3",
+                        "on-surface": "#0b1c30",
+                        "primary": "#3525cd",
+                        "error-container": "#ffdad6",
+                        "surface-dim": "#cbdbf5",
+                        "secondary-container": "#d5e0f8",
+                        "outline-variant": "#c7c4d8",
+                        "secondary-fixed": "#d8e3fb",
+                        "on-secondary-fixed": "#111c2d",
+                        "on-secondary-fixed-variant": "#3c475a",
+                        "ink-primary": "#0f172a",
+                        "badge-lost-text": "#e11d48",
+                        "on-primary-container": "#dad7ff",
+                        "canvas-slate": "#f8fafc",
+                        "interactive-hover": "#4338ca",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed-dim": "#bcc7de",
+                        "ink-secondary": "#334155",
+                        "error": "#ba1a1a",
+                        "primary-fixed": "#e2dfff",
+                        "badge-found-text": "#059669",
+                        "on-background": "#0b1c30"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter-desktop": "2rem",
+                        "space-xxs": "0.25rem",
+                        "margin": "1rem",
+                        "space-md": "1rem",
+                        "space-xs": "0.5rem",
+                        "space-xl": "2rem",
+                        "gutter-tablet": "1.5rem",
+                        "margin-tablet": "1.5rem",
+                        "space-lg": "1.5rem",
+                        "margin-desktop": "2.5rem",
+                        "space-xxl": "3rem",
+                        "space-sm": "0.75rem",
+                        "gutter": "1rem"
+                    },
+                    "fontFamily": {
+                        "body-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "title-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "badge": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "display-hero": ["Inter"],
+                        "display-hero-mobile": ["Inter"],
+                        "caption": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-sm": ["13px", { "lineHeight": "18px", "letterSpacing": "0px", "fontWeight": "400" }],
+                        "headline-md": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.4px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.8px", "fontWeight": "700" }],
+                        "title-md": ["16px", { "lineHeight": "22px", "letterSpacing": "-0.1px", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0px", "fontWeight": "400" }],
+                        "badge": ["11px", { "lineHeight": "14px", "letterSpacing": "0.25px", "fontWeight": "700" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0px", "fontWeight": "500" }],
+                        "headline-sm": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.2px", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.5px", "fontWeight": "700" }],
+                        "display-hero": ["48px", { "lineHeight": "52px", "letterSpacing": "-1.5px", "fontWeight": "700" }],
+                        "display-hero-mobile": ["32px", { "lineHeight": "38px", "letterSpacing": "-0.8px", "fontWeight": "700" }],
+                        "caption": ["12px", { "lineHeight": "16px", "letterSpacing": "0px", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0px", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.1px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Hide Scrollbar */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+            line-height: 1;
+        }
+    </style>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-canvas-slate text-ink-primary font-body-md antialiased min-h-screen pb-24 md:pb-12 selection:bg-surface-container-high selection:text-ink-primary">
+    <!-- TOP APP BAR (Shared Components JSON Anchor) -->
+    <header
+        class="fixed top-0 left-0 right-0 w-full z-40 bg-surface-white border-b border-border-slate shadow-[0_1px_2px_rgba(15,23,42,0.03)]">
+        <div class="max-w-5xl mx-auto px-margin md:px-margin-tablet h-14 flex items-center justify-between">
+            <!-- Brand & Leading Icon -->
+            <div class="flex items-center gap-2.5">
+                <div
+                    class="w-8 h-8 rounded-lg bg-surface-container-low text-primary-container flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[20px]" data-icon="school">school</span>
+                </div>
+                <div>
+                    <h1
+                        class="text-headline-sm font-headline-sm text-ink-primary tracking-tight font-bold flex items-center gap-1.5 leading-none">
+                        Campus Lost &amp; Found
+                    </h1>
+                    <p class="text-[11px] text-ink-muted leading-tight font-medium hidden sm:block">Thapar campus
+                        registry for IDs, keys, and gear</p>
+                </div>
+            </div>
+            <!-- Trailing Action -->
+            <div class="flex items-center gap-3">
+                <button
+                    class="bg-primary-container hover:bg-interactive-hover active:scale-[0.98] text-white rounded-full px-4 py-1.5 text-label-md font-label-md transition-all shadow-sm flex items-center gap-1.5 cursor-pointer"
+                    id="openReportBtn">
+                    <span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
+                    <span>Report</span>
+                </button>
+            </div>
+        </div>
+    </header>
+    <!-- MAIN WRAPPER -->
+    <main class="max-w-5xl mx-auto px-margin md:px-margin-tablet pt-20 md:pt-22">
+        <!-- Campus Trust Banner / Verification Callout -->
+        <div
+            class="mb-5 p-3.5 bg-surface-white border-l-4 border-primary-container border border-border-slate rounded-lg flex items-start sm:items-center justify-between gap-3 shadow-[0_1px_2px_0_rgba(15,23,42,0.04)]">
+            <div class="flex items-center gap-2.5">
+                <span class="material-symbols-outlined text-primary-container text-[20px]"
+                    data-icon="verified_user">verified_user</span>
+                <p class="text-body-sm font-body-sm text-ink-secondary">
+                    <strong class="font-semibold text-ink-primary">Verified Student Hub:</strong> WhatsApp direct
+                    connect is active for immediate handoffs. Please confirm matching serials/stickers before
+                    transferring items.
+                </p>
+            </div>
+            <span class="text-caption font-caption text-ink-faint shrink-0 hidden md:inline-block">Academic Year
+                2024-25</span>
+        </div>
+        <!-- Feed Mode Switcher (Segmented Tab Control) -->
+        <div class="flex justify-center mb-6">
+            <div class="bg-slate-200/70 p-1 rounded-xl flex items-center gap-1 w-full max-w-md shadow-inner">
+                <button
+                    class="flex-1 py-1.5 px-3 rounded-lg text-label-sm font-label-sm transition-all duration-150 flex items-center justify-center gap-1.5 text-ink-secondary hover:text-ink-primary"
+                    id="tabLost" onclick="setMode('lost')">
+                    <span class="w-2 h-2 rounded-full bg-badge-lost-text inline-block"></span>
+                    <span>Lost Items</span>
+                    <span class="ml-1 text-[10px] px-1.5 py-0.2 rounded-full bg-white/60 font-bold"
+                        id="lostCountBadge">0</span>
+                </button>
+                <button
+                    class="flex-1 py-1.5 px-3 rounded-lg text-label-sm font-label-sm transition-all duration-150 flex items-center justify-center gap-1.5 text-ink-secondary hover:text-ink-primary"
+                    id="tabFound" onclick="setMode('found')">
+                    <span class="w-2 h-2 rounded-full bg-badge-found-text inline-block"></span>
+                    <span>Found Items</span>
+                    <span class="ml-1 text-[10px] px-1.5 py-0.2 rounded-full bg-white/60 font-bold"
+                        id="foundCountBadge">0</span>
+                </button>
+                <button
+                    class="flex-1 py-1.5 px-3 rounded-lg text-label-sm font-label-sm transition-all duration-150 flex items-center justify-center gap-1.5 bg-surface-white text-ink-primary font-semibold shadow-sm"
+                    id="tabAll" onclick="setMode('all')">
+                    <span>All</span>
+                    <span class="ml-1 text-[10px] px-1.5 py-0.2 rounded-full bg-slate-100 font-bold text-ink-primary"
+                        id="allCountBadge">0</span>
+                </button>
+            </div>
+        </div>
+        <!-- Filter & Search Section -->
+        <div class="space-y-3 mb-6">
+            <!-- Search Input -->
+            <div class="relative">
+                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-ink-faint">
+                    <span class="material-symbols-outlined text-[20px]" data-icon="search">search</span>
+                </span>
+                <input
+                    class="w-full h-11 pl-10 pr-10 bg-surface-white border border-border-slate rounded-lg text-body-md font-body-md text-ink-primary placeholder:text-ink-faint focus:outline-none focus:border-primary-container focus:ring-2 focus:ring-primary-container/20 transition-all shadow-[0_1px_2px_0_rgba(15,23,42,0.02)]"
+                    id="searchInput" placeholder="Search by title (e.g. ID card, Casio, keys, Hostel J)..."
+                    type="text" />
+                <button
+                    class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-ink-faint hover:text-ink-primary hidden"
+                    id="clearSearchBtn">
+                    <span class="material-symbols-outlined text-[18px]" data-icon="close">close</span>
+                </button>
+            </div>
+            <!-- Categories Scrollable Bar -->
+            <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 text-label-sm font-label-sm">
+                <span
+                    class="text-caption font-caption text-ink-muted uppercase tracking-wider shrink-0 mr-1 hidden sm:inline">Category:</span>
+                <button
+                    class="cat-pill active shrink-0 px-3 py-1 rounded-full border border-primary-container bg-primary-container text-white transition-colors"
+                    data-cat="all" onclick="setCategory('all')">All Categories</button>
+                <button
+                    class="cat-pill shrink-0 px-3 py-1 rounded-full border border-border-slate bg-surface-white text-ink-secondary hover:bg-canvas-slate transition-colors"
+                    data-cat="Smart Card / ID" onclick="setCategory('Smart Card / ID')">Smart Card / ID</button>
+                <button
+                    class="cat-pill shrink-0 px-3 py-1 rounded-full border border-border-slate bg-surface-white text-ink-secondary hover:bg-canvas-slate transition-colors"
+                    data-cat="Keys" onclick="setCategory('Keys')">Keys</button>
+                <button
+                    class="cat-pill shrink-0 px-3 py-1 rounded-full border border-border-slate bg-surface-white text-ink-secondary hover:bg-canvas-slate transition-colors"
+                    data-cat="Electronics / Audio" onclick="setCategory('Electronics / Audio')">Electronics /
+                    Audio</button>
+                <button
+                    class="cat-pill shrink-0 px-3 py-1 rounded-full border border-border-slate bg-surface-white text-ink-secondary hover:bg-canvas-slate transition-colors"
+                    data-cat="Stationery / Drafter" onclick="setCategory('Stationery / Drafter')">Stationery /
+                    Drafter</button>
+                <button
+                    class="cat-pill shrink-0 px-3 py-1 rounded-full border border-border-slate bg-surface-white text-ink-secondary hover:bg-canvas-slate transition-colors"
+                    data-cat="Cycle / Other" onclick="setCategory('Cycle / Other')">Cycle / Other</button>
+            </div>
+            <!-- Campus Location Pills -->
+            <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 text-label-sm font-label-sm">
+                <span
+                    class="text-caption font-caption text-ink-muted uppercase tracking-wider shrink-0 mr-1 hidden sm:inline">Location:</span>
+                <button
+                    class="loc-pill active shrink-0 px-2.5 py-0.5 rounded-md border border-ink-primary bg-ink-primary text-white transition-colors"
+                    data-loc="all" onclick="setLocation('all')">All Locations</button>
+                <button
+                    class="loc-pill shrink-0 px-2.5 py-0.5 rounded-md border border-border-slate bg-surface-white text-ink-secondary hover:bg-canvas-slate transition-colors"
+                    data-loc="Central Library" onclick="setLocation('Central Library')">Central Library</button>
+                <button
+                    class="loc-pill shrink-0 px-2.5 py-0.5 rounded-md border border-border-slate bg-surface-white text-ink-secondary hover:bg-canvas-slate transition-colors"
+                    data-loc="LT / LP Complex" onclick="setLocation('LT / LP Complex')">LT / LP Complex</button>
+                <button
+                    class="loc-pill shrink-0 px-2.5 py-0.5 rounded-md border border-border-slate bg-surface-white text-ink-secondary hover:bg-canvas-slate transition-colors"
+                    data-loc="Hostel Area" onclick="setLocation('Hostel Area')">Hostel Area</button>
+                <button
+                    class="loc-pill shrink-0 px-2.5 py-0.5 rounded-md border border-border-slate bg-surface-white text-ink-secondary hover:bg-canvas-slate transition-colors"
+                    data-loc="COS / Sports" onclick="setLocation('COS / Sports')">COS / Sports</button>
+                <button
+                    class="loc-pill shrink-0 px-2.5 py-0.5 rounded-md border border-border-slate bg-surface-white text-ink-secondary hover:bg-canvas-slate transition-colors"
+                    data-loc="Other" onclick="setLocation('Other')">Other</button>
+            </div>
+        </div>
+        <!-- Active Filters Feedback & Quick Reset -->
+        <div class="hidden items-center justify-between text-body-sm font-body-sm text-ink-muted mb-4 px-1"
+            id="filterStatus">
+            <span id="filterSummaryText">Showing filtered results</span>
+            <button
+                class="text-primary-container font-semibold hover:underline flex items-center gap-1 text-caption font-caption"
+                onclick="resetFilters()">
+                <span class="material-symbols-outlined text-[14px]" data-icon="refresh">refresh</span>
+                Reset filters
+            </button>
+        </div>
+        <!-- ITEM FEED CONTAINER -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="itemsGrid">
+            <!-- Dynamic Item Cards will be rendered here -->
+        </div>
+        <!-- Empty State -->
+        <div class="hidden text-center py-16 px-4 bg-surface-white rounded-xl border border-dashed border-border-slate mt-4"
+            id="emptyState">
+            <div
+                class="w-14 h-14 mx-auto mb-3 rounded-full bg-surface-container-low text-primary-container flex items-center justify-center">
+                <span class="material-symbols-outlined text-[28px]" data-icon="find_in_page">find_in_page</span>
+            </div>
+            <h3 class="text-headline-sm font-headline-sm text-ink-primary mb-1">No reports matched your query</h3>
+            <p class="text-body-sm font-body-sm text-ink-muted max-w-sm mx-auto mb-4">Try broadening your search term or
+                selecting 'All' in categories and locations.</p>
+            <button
+                class="inline-flex items-center gap-1.5 px-4 py-2 border border-border-slate rounded-lg text-label-md font-label-md text-ink-secondary bg-surface-white hover:bg-canvas-slate transition-colors"
+                onclick="resetFilters()">
+                <span class="material-symbols-outlined text-[16px]" data-icon="refresh">refresh</span>
+                Clear all filters
+            </button>
+        </div>
+    </main>
+    <!-- BOTTOM NAVIGATION BAR (Shared Components JSON Anchor) -->
+    <nav
+        class="fixed bottom-0 left-0 right-0 w-full z-40 bg-surface-white border-t border-border-slate shadow-[0_-2px_10px_rgba(0,0,0,0.03)] md:hidden">
+        <div class="flex justify-around items-center h-14 max-w-lg mx-auto px-margin">
+            <!-- Feed (Active) -->
+            <button class="flex flex-col items-center justify-center text-primary-container font-semibold gap-0.5 py-1"
+                id="bottomNavFeed" onclick="setTab('feed')">
+                <span class="material-symbols-outlined text-[20px]" data-icon="dynamic_feed">dynamic_feed</span>
+                <span class="text-label-sm font-label-sm">Feed</span>
+            </button>
+            <!-- Search -->
+            <button
+                class="flex flex-col items-center justify-center text-ink-muted hover:text-interactive-hover gap-0.5 py-1 transition-colors"
+                id="bottomNavSearch" onclick="focusSearch()">
+                <span class="material-symbols-outlined text-[20px]" data-icon="search">search</span>
+                <span class="text-label-sm font-label-sm">Search</span>
+            </button>
+            <!-- My Posts -->
+            <button
+                class="flex flex-col items-center justify-center text-ink-muted hover:text-interactive-hover gap-0.5 py-1 transition-colors relative"
+                id="bottomNavMyPosts" onclick="toggleMyPostsView()">
+                <span class="material-symbols-outlined text-[20px]" data-icon="inventory_2">inventory_2</span>
+                <span class="text-label-sm font-label-sm">My Posts</span>
+                <span class="absolute top-0.5 right-2 w-2 h-2 rounded-full bg-primary-container hidden"
+                    id="myPostsCountBadge"></span>
+            </button>
+            <!-- Saved -->
+            <button
+                class="flex flex-col items-center justify-center text-ink-muted hover:text-interactive-hover gap-0.5 py-1 transition-colors"
+                id="bottomNavSaved" onclick="toggleSavedView()">
+                <span class="material-symbols-outlined text-[20px]" data-icon="bookmark">bookmark</span>
+                <span class="text-label-sm font-label-sm">Saved</span>
+            </button>
+        </div>
+    </nav>
+    <!-- REPORT ITEM MODAL -->
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-200"
+        id="reportModal">
+        <div
+            class="bg-surface-white rounded-xl border border-border-slate shadow-xl w-full max-w-lg max-h-[813px] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+            <!-- Modal Header -->
+            <div class="p-4 border-b border-border-slate flex items-center justify-between">
+                <div>
+                    <h2 class="text-headline-sm font-headline-sm text-ink-primary">File a Campus Notice</h2>
+                    <p class="text-caption font-caption text-ink-muted">Posts reach student bulletin feeds immediately
+                    </p>
+                </div>
+                <button
+                    class="text-ink-muted hover:text-ink-primary p-1 rounded-lg hover:bg-canvas-slate transition-colors"
+                    id="closeReportBtn">
+                    <span class="material-symbols-outlined text-[22px]" data-icon="close">close</span>
+                </button>
+            </div>
+            <!-- Modal Body -->
+            <form class="p-4 sm:p-5 overflow-y-auto space-y-4 text-ink-secondary" id="reportForm">
+                <!-- Toggle: I Lost vs I Found -->
+                <div>
+                    <label class="block text-label-sm font-label-sm text-ink-primary mb-1.5">What type of notice is
+                        this?</label>
+                    <div class="grid grid-cols-2 gap-2 p-1 bg-slate-100 rounded-lg">
+                        <button
+                            class="py-2 rounded-md text-label-md font-label-md font-semibold flex items-center justify-center gap-1.5 transition-all bg-badge-lost-bg text-badge-lost-text border border-badge-lost-border shadow-xs"
+                            id="formTypeLost" onclick="setFormType('lost')" type="button">
+                            <span class="w-2 h-2 rounded-full bg-badge-lost-text"></span>
+                            I Lost Something
+                        </button>
+                        <button
+                            class="py-2 rounded-md text-label-md font-label-md font-medium flex items-center justify-center gap-1.5 transition-all text-ink-muted hover:text-ink-primary"
+                            id="formTypeFound" onclick="setFormType('found')" type="button">
+                            <span class="w-2 h-2 rounded-full bg-badge-found-text"></span>
+                            I Found Something
+                        </button>
+                    </div>
+                    <input id="itemTypeInput" type="hidden" value="lost" />
+                </div>
+                <!-- Title -->
+                <div>
+                    <label class="block text-label-sm font-label-sm text-ink-secondary mb-1" for="itemTitle">Item Title
+                        <span class="text-rose-500">*</span></label>
+                    <input
+                        class="w-full text-body-md font-body-md px-3 py-2 bg-surface-white border border-border-slate rounded-lg focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container"
+                        id="itemTitle" minlength="3" placeholder="e.g. Hostel J Room Key with lanyard or Casio fx-991EX"
+                        required="" type="text" />
+                </div>
+                <!-- Category & Campus Location (2 cols) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-label-sm font-label-sm text-ink-secondary mb-1"
+                            for="itemCategory">Category <span class="text-rose-500">*</span></label>
+                        <select
+                            class="w-full text-body-md font-body-md px-3 py-2 bg-surface-white border border-border-slate rounded-lg focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container"
+                            id="itemCategory" required="">
+                            <option value="Smart Card / ID">Smart Card / ID</option>
+                            <option value="Keys">Keys</option>
+                            <option value="Electronics / Audio">Electronics / Audio</option>
+                            <option value="Stationery / Drafter">Stationery / Drafter</option>
+                            <option value="Cycle / Other">Cycle / Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-label-sm font-label-sm text-ink-secondary mb-1"
+                            for="itemLocation">Campus Location <span class="text-rose-500">*</span></label>
+                        <select
+                            class="w-full text-body-md font-body-md px-3 py-2 bg-surface-white border border-border-slate rounded-lg focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container"
+                            id="itemLocation" required="">
+                            <option value="Central Library">Central Library</option>
+                            <option value="LT / LP Complex">LT / LP Complex</option>
+                            <option value="Hostel Area">Hostel Area</option>
+                            <option value="COS / Sports">COS / Sports</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                <!-- Date & WhatsApp Contact Number -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-label-sm font-label-sm text-ink-secondary mb-1" for="itemDate">Date
+                            Occurred <span class="text-rose-500">*</span></label>
+                        <input
+                            class="w-full text-body-md font-body-md px-3 py-2 bg-surface-white border border-border-slate rounded-lg focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container"
+                            id="itemDate" required="" type="date" />
+                    </div>
+                    <div>
+                        <label class="block text-label-sm font-label-sm text-ink-secondary mb-1"
+                            for="itemPhone">WhatsApp Contact <span class="text-rose-500">*</span></label>
+                        <div class="flex">
+                            <span
+                                class="inline-flex items-center px-3 text-body-sm font-body-sm bg-slate-100 border border-r-0 border-border-slate rounded-l-lg text-ink-muted">
+                                +91
+                            </span>
+                            <input
+                                class="w-full text-body-md font-body-md px-3 py-2 bg-surface-white border border-border-slate rounded-r-lg focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container"
+                                id="itemPhone" maxlength="10" pattern="[6-9][0-9]{9}" placeholder="9876543210"
+                                required="" title="Enter a 10-digit Indian mobile number starting with 6-9"
+                                type="tel" />
+                        </div>
+                    </div>
+                </div>
+                <!-- Description / Identifiers -->
+                <div>
+                    <label class="block text-label-sm font-label-sm text-ink-secondary mb-1" for="itemDesc">Description
+                        &amp; Distinguishing Clues <span class="text-rose-500">*</span></label>
+                    <textarea
+                        class="w-full text-body-md font-body-md px-3 py-2 bg-surface-white border border-border-slate rounded-lg focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container resize-none"
+                        id="itemDesc"
+                        placeholder="Mention subtle scratches, stickers, key tag colors, or exact lecture room row. Avoid sharing OTPs or critical secret codes."
+                        required="" rows="3"></textarea>
+                </div>
+                <!-- Photo Upload Box -->
+                <div>
+                    <label class="block text-label-sm font-label-sm text-ink-secondary mb-1">Optional Photo</label>
+                    <div class="border-2 border-dashed border-border-slate hover:border-primary-container rounded-lg p-4 text-center cursor-pointer transition-colors bg-canvas-slate/50"
+                        id="dropZone">
+                        <input accept=".jpg,.jpeg,.png,.webp" class="hidden" id="fileInput" type="file" />
+                        <div class="flex flex-col items-center justify-center gap-1.5 py-1" id="uploadPrompt">
+                            <span class="material-symbols-outlined text-ink-faint text-[28px]"
+                                data-icon="add_photo_alternate">add_photo_alternate</span>
+                            <p class="text-body-sm font-body-sm text-ink-primary font-medium">Click or tap to upload
+                                photo</p>
+                            <p class="text-caption font-caption text-ink-muted">Supports JPG, PNG, WebP</p>
+                        </div>
+                        <!-- Photo Preview -->
+                        <div class="hidden relative max-h-40 overflow-hidden rounded-md" id="previewContainer">
+                            <img alt="Uploaded Preview" class="w-full h-36 object-cover rounded-md"
+                                id="imagePreview" src="" />
+                            <button
+                                class="absolute top-2 right-2 p-1 bg-slate-900/70 hover:bg-slate-900 text-white rounded-full transition-colors"
+                                id="removePhotoBtn" type="button">
+                                <span class="material-symbols-outlined text-[16px]" data-icon="close">close</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Form Actions -->
+                <div class="pt-2 flex items-center justify-end gap-2 border-t border-border-slate">
+                    <button
+                        class="px-4 py-2 text-label-md font-label-md border border-border-slate rounded-lg text-ink-secondary hover:bg-canvas-slate transition-colors"
+                        id="cancelReportBtn" type="button">
+                        Cancel
+                    </button>
+                    <button
+                        class="px-5 py-2 text-label-md font-label-md bg-primary-container hover:bg-interactive-hover text-white rounded-lg font-medium shadow-sm transition-all active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
+                        id="submitReportBtn" type="submit">
+                        Publish Notice
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- LIGHTBOX / IMAGE MODAL -->
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-200"
+        id="lightboxModal">
+        <div
+            class="relative max-w-2xl max-h-[795px] bg-surface-white rounded-xl overflow-hidden shadow-2xl flex flex-col">
+            <button
+                class="absolute top-3 right-3 z-10 p-1.5 bg-black/60 hover:bg-black text-white rounded-full transition-colors cursor-pointer"
+                onclick="closeLightbox()">
+                <span class="material-symbols-outlined text-[20px]" data-icon="close">close</span>
+            </button>
+            <img alt="Enlarged campus item preview" class="max-h-[663px] w-auto object-contain bg-slate-950"
+                id="lightboxImg" src="" />
+            <div class="p-3 bg-surface-white border-t border-border-slate flex justify-between items-center">
+                <span class="text-title-md font-title-md text-ink-primary truncate pr-4" id="lightboxCaption"></span>
+                <button class="text-caption font-caption text-ink-muted hover:text-ink-primary shrink-0"
+                    onclick="closeLightbox()">Close Preview</button>
+            </div>
+        </div>
+    </div>
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div class="fixed bottom-20 md:bottom-6 right-4 left-4 md:left-auto md:w-80 z-50 bg-slate-900 text-white px-4 py-3 rounded-lg shadow-lg flex items-center justify-between gap-3 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none"
+        id="toast">
+        <div class="flex items-center gap-2.5">
+            <span class="material-symbols-outlined text-emerald-400 text-[20px]" data-icon="check_circle"
+                id="toastIcon">check_circle</span>
+            <span class="text-body-sm font-body-sm" id="toastMessage">Notice posted successfully</span>
+        </div>
+        <button class="text-slate-400 hover:text-white pointer-events-auto" onclick="hideToast()">
+            <span class="material-symbols-outlined text-[16px]" data-icon="close">close</span>
+        </button>
+    </div>
+    <!-- JAVASCRIPT APPLICATION CORE -->
+    <script>
+        // Local storage keys for ownership tokens and bookmarks
+        const TOKEN_KEY = 'campus_lostfound_tokens';
+        const SAVED_ITEMS_KEY = 'campus_lostfound_saved';
+
+        // Application State
+        let items = [];
+        let currentMode = 'all'; // 'all', 'lost', 'found'
+        let currentCategory = 'all';
+        let currentLocation = 'all';
+        let searchQuery = '';
+        let viewMode = 'feed'; // 'feed', 'myposts', 'saved'
+        let searchDebounceTimer = null;
+        let activeFetchController = null;
+
+        function getTodayLocalDate() {
+            const now = new Date();
+            return new Date(now.getTime() - now.getTimezoneOffset() * 60000)
+                .toISOString()
+                .split('T')[0];
+        }
+
+        function formatDisplayDate(dateStr) {
+            if (!dateStr) return '';
+            const parsed = new Date(`${dateStr}T00:00:00`);
+            if (Number.isNaN(parsed.getTime())) return dateStr;
+            return parsed.toLocaleDateString('en-IN', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric',
+            });
+        }
+
+        function getMyTokens() {
+            try {
+                const parsed = JSON.parse(localStorage.getItem(TOKEN_KEY));
+                if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+                    return parsed;
+                }
+                return {};
+            } catch (e) {
+                return {};
+            }
+        }
+
+        function saveMyTokens(tokens) {
+            localStorage.setItem(TOKEN_KEY, JSON.stringify(tokens));
+            updateMyPostsBadge();
+        }
+
+        function getSavedItems() {
+            try {
+                const parsed = JSON.parse(localStorage.getItem(SAVED_ITEMS_KEY));
+                return Array.isArray(parsed) ? parsed.map(Number) : [];
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function toggleSaveItem(id, event) {
+            if (event) event.stopPropagation();
+            const numericId = Number(id);
+            let saved = getSavedItems();
+            if (saved.includes(numericId)) {
+                saved = saved.filter(x => x !== numericId);
+                showToast('Removed from saved items', 'bookmark_border');
+            } else {
+                saved.push(numericId);
+                showToast('Saved to your device bookmarks', 'bookmark');
+            }
+            localStorage.setItem(SAVED_ITEMS_KEY, JSON.stringify(saved));
+            render();
+        }
+
+        function updateMyPostsBadge() {
+            const tokens = getMyTokens();
+            const badge = document.getElementById('myPostsCountBadge');
+            if (Object.keys(tokens).length > 0) {
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        function updateCounterBadges(openItems) {
+            const totalLost = openItems.filter(i => i.type === 'lost').length;
+            const totalFound = openItems.filter(i => i.type === 'found').length;
+            document.getElementById('lostCountBadge').textContent = totalLost;
+            document.getElementById('foundCountBadge').textContent = totalFound;
+            document.getElementById('allCountBadge').textContent = openItems.length;
+        }
+
+        async function refreshOpenCounts(signal) {
+            try {
+                const response = await fetch('/api/items', { signal });
+                if (!response.ok) return;
+                const openItems = await response.json();
+                updateCounterBadges(openItems);
+            } catch (err) {
+                if (err.name !== 'AbortError') {
+                    console.error('Failed to refresh tab counts:', err);
+                }
+            }
+        }
+
+        async function loadItems() {
+            if (activeFetchController) {
+                activeFetchController.abort();
+            }
+            activeFetchController = new AbortController();
+            const { signal } = activeFetchController;
+
+            const params = new URLSearchParams();
+            const isPersonalView = viewMode === 'myposts' || viewMode === 'saved';
+
+            if (isPersonalView) {
+                params.set('status', 'all');
+            } else {
+                if (currentMode === 'lost' || currentMode === 'found') {
+                    params.set('type', currentMode);
+                }
+                if (currentCategory && currentCategory !== 'all') {
+                    params.set('category', currentCategory);
+                }
+                if (currentLocation && currentLocation !== 'all') {
+                    params.set('location', currentLocation);
+                }
+                if (searchQuery.trim()) {
+                    params.set('search', searchQuery.trim());
+                }
+            }
+
+            const queryString = params.toString();
+            const url = queryString ? `/api/items?${queryString}` : '/api/items';
+
+            try {
+                const response = await fetch(url, { signal });
+                if (!response.ok) {
+                    throw new Error('Failed to load campus notices');
+                }
+                items = await response.json();
+
+                if (!queryString) {
+                    updateCounterBadges(items);
+                } else {
+                    refreshOpenCounts(signal);
+                }
+
+                render();
+            } catch (err) {
+                if (err.name === 'AbortError') return;
+                console.error(err);
+                showToast(err.message || 'Could not reach server', 'error');
+            }
+        }
+
+        // Filter Controls
+        function setMode(mode) {
+            currentMode = mode;
+
+            const tabLost = document.getElementById('tabLost');
+            const tabFound = document.getElementById('tabFound');
+            const tabAll = document.getElementById('tabAll');
+
+            [tabLost, tabFound, tabAll].forEach(t => {
+                t.className = 'flex-1 py-1.5 px-3 rounded-lg text-label-sm font-label-sm transition-all duration-150 flex items-center justify-center gap-1.5 text-ink-secondary hover:text-ink-primary';
+            });
+
+            if (mode === 'lost') {
+                tabLost.className = 'flex-1 py-1.5 px-3 rounded-lg text-label-sm font-label-sm transition-all duration-150 flex items-center justify-center gap-1.5 bg-surface-white text-ink-primary font-semibold shadow-sm border border-border-slate/40';
+            } else if (mode === 'found') {
+                tabFound.className = 'flex-1 py-1.5 px-3 rounded-lg text-label-sm font-label-sm transition-all duration-150 flex items-center justify-center gap-1.5 bg-surface-white text-ink-primary font-semibold shadow-sm border border-border-slate/40';
+            } else {
+                tabAll.className = 'flex-1 py-1.5 px-3 rounded-lg text-label-sm font-label-sm transition-all duration-150 flex items-center justify-center gap-1.5 bg-surface-white text-ink-primary font-semibold shadow-sm border border-border-slate/40';
+            }
+
+            loadItems();
+        }
+
+        function setCategory(cat) {
+            currentCategory = cat;
+            document.querySelectorAll('.cat-pill').forEach(btn => {
+                if (btn.dataset.cat === cat) {
+                    btn.className = 'cat-pill active shrink-0 px-3 py-1 rounded-full border border-primary-container bg-primary-container text-white transition-colors';
+                } else {
+                    btn.className = 'cat-pill shrink-0 px-3 py-1 rounded-full border border-border-slate bg-surface-white text-ink-secondary hover:bg-canvas-slate transition-colors';
+                }
+            });
+            loadItems();
+        }
+
+        function setLocation(loc) {
+            currentLocation = loc;
+            document.querySelectorAll('.loc-pill').forEach(btn => {
+                if (btn.dataset.loc === loc) {
+                    btn.className = 'loc-pill active shrink-0 px-2.5 py-0.5 rounded-md border border-ink-primary bg-ink-primary text-white transition-colors';
+                } else {
+                    btn.className = 'loc-pill shrink-0 px-2.5 py-0.5 rounded-md border border-border-slate bg-surface-white text-ink-secondary hover:bg-canvas-slate transition-colors';
+                }
+            });
+            loadItems();
+        }
+
+        function resetFilters() {
+            clearTimeout(searchDebounceTimer);
+            currentMode = 'all';
+            currentCategory = 'all';
+            currentLocation = 'all';
+            searchQuery = '';
+            viewMode = 'feed';
+            document.getElementById('searchInput').value = '';
+            document.getElementById('clearSearchBtn').classList.add('hidden');
+
+            // Reset tab and pill UI classes without triggering duplicate fetches
+            document.getElementById('tabLost').className = 'flex-1 py-1.5 px-3 rounded-lg text-label-sm font-label-sm transition-all duration-150 flex items-center justify-center gap-1.5 text-ink-secondary hover:text-ink-primary';
+            document.getElementById('tabFound').className = 'flex-1 py-1.5 px-3 rounded-lg text-label-sm font-label-sm transition-all duration-150 flex items-center justify-center gap-1.5 text-ink-secondary hover:text-ink-primary';
+            document.getElementById('tabAll').className = 'flex-1 py-1.5 px-3 rounded-lg text-label-sm font-label-sm transition-all duration-150 flex items-center justify-center gap-1.5 bg-surface-white text-ink-primary font-semibold shadow-sm border border-border-slate/40';
+
+            document.querySelectorAll('.cat-pill').forEach(btn => {
+                btn.className = btn.dataset.cat === 'all'
+                    ? 'cat-pill active shrink-0 px-3 py-1 rounded-full border border-primary-container bg-primary-container text-white transition-colors'
+                    : 'cat-pill shrink-0 px-3 py-1 rounded-full border border-border-slate bg-surface-white text-ink-secondary hover:bg-canvas-slate transition-colors';
+            });
+            document.querySelectorAll('.loc-pill').forEach(btn => {
+                btn.className = btn.dataset.loc === 'all'
+                    ? 'loc-pill active shrink-0 px-2.5 py-0.5 rounded-md border border-ink-primary bg-ink-primary text-white transition-colors'
+                    : 'loc-pill shrink-0 px-2.5 py-0.5 rounded-md border border-border-slate bg-surface-white text-ink-secondary hover:bg-canvas-slate transition-colors';
+            });
+
+            setTab('feed');
+        }
+
+        function setTab(tab) {
+            viewMode = tab;
+            const navFeed = document.getElementById('bottomNavFeed');
+            const navSearch = document.getElementById('bottomNavSearch');
+            const navMyPosts = document.getElementById('bottomNavMyPosts');
+            const navSaved = document.getElementById('bottomNavSaved');
+
+            [navFeed, navSearch, navMyPosts, navSaved].forEach(el => {
+                el.className = 'flex flex-col items-center justify-center text-ink-muted hover:text-interactive-hover gap-0.5 py-1 transition-colors';
+            });
+
+            if (tab === 'feed') {
+                navFeed.className = 'flex flex-col items-center justify-center text-primary-container font-semibold gap-0.5 py-1';
+            } else if (tab === 'myposts') {
+                navMyPosts.className = 'flex flex-col items-center justify-center text-primary-container font-semibold gap-0.5 py-1';
+            } else if (tab === 'saved') {
+                navSaved.className = 'flex flex-col items-center justify-center text-primary-container font-semibold gap-0.5 py-1';
+            }
+            loadItems();
+        }
+
+        function toggleMyPostsView() {
+            setTab(viewMode === 'myposts' ? 'feed' : 'myposts');
+        }
+
+        function toggleSavedView() {
+            setTab(viewMode === 'saved' ? 'feed' : 'saved');
+        }
+
+        function focusSearch() {
+            const input = document.getElementById('searchInput');
+            input.focus();
+            window.scrollTo({ top: input.offsetTop - 80, behavior: 'smooth' });
+        }
+
+        // Render Function
+        function render() {
+            const myTokens = getMyTokens();
+            const savedItems = getSavedItems();
+            const grid = document.getElementById('itemsGrid');
+            const emptyState = document.getElementById('emptyState');
+            const filterStatus = document.getElementById('filterStatus');
+            const filterSummaryText = document.getElementById('filterSummaryText');
+
+            let visibleItems = items;
+            if (viewMode === 'myposts') {
+                visibleItems = items.filter(item => Object.prototype.hasOwnProperty.call(myTokens, String(item.id)));
+            } else if (viewMode === 'saved') {
+                visibleItems = items.filter(item => savedItems.includes(Number(item.id)));
+            }
+
+            // Filter feedback text
+            const isFiltered = currentMode !== 'all' || currentCategory !== 'all' || currentLocation !== 'all' || searchQuery.trim() !== '' || viewMode !== 'feed';
+            if (isFiltered) {
+                filterStatus.classList.remove('hidden');
+                filterStatus.classList.add('flex');
+                let descriptor = `Showing ${visibleItems.length} notices`;
+                if (viewMode === 'myposts') descriptor = `Showing ${visibleItems.length} notices reported by you`;
+                if (viewMode === 'saved') descriptor = `Showing ${visibleItems.length} bookmarked items`;
+                filterSummaryText.textContent = descriptor;
+            } else {
+                filterStatus.classList.add('hidden');
+                filterStatus.classList.remove('flex');
+            }
+
+            if (visibleItems.length === 0) {
+                grid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+
+            grid.innerHTML = visibleItems.map(item => {
+                const itemId = Number(item.id);
+                const isOwner = Object.prototype.hasOwnProperty.call(myTokens, String(itemId));
+                const isSaved = savedItems.includes(itemId);
+                const isLost = item.type === 'lost';
+                const isResolved = item.status === 'resolved';
+
+                // WhatsApp link preparation
+                const waText = `Hey, regarding the ${item.type} item "${item.title}" on Campus Lost & Found...`;
+                const waUrl = `https://wa.me/91${encodeURIComponent(item.contact_phone)}?text=${encodeURIComponent(waText)}`;
+
+                // Status badge
+                let badgeHtml = '';
+                if (isResolved) {
+                    badgeHtml = `
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-badge font-badge bg-badge-claimed-bg text-badge-claimed-text border border-badge-claimed-border">
+              <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span>
+              RESOLVED / CLAIMED
+            </span>
+          `;
+                } else if (isLost) {
+                    badgeHtml = `
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-badge font-badge bg-badge-lost-bg text-badge-lost-text border border-badge-lost-border">
+              <span class="w-1.5 h-1.5 rounded-full bg-badge-lost-text"></span>
+              LOST
+            </span>
+          `;
+                } else {
+                    badgeHtml = `
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-badge font-badge bg-badge-found-bg text-badge-found-text border border-badge-found-border">
+              <span class="w-1.5 h-1.5 rounded-full bg-badge-found-text"></span>
+              FOUND
+            </span>
+          `;
+                }
+
+                // Image Section
+                let imageMarkup = '';
+                if (item.image_filename) {
+                    const imageUrl = `/static/uploads/${encodeURIComponent(item.image_filename)}`;
+                    imageMarkup = `
+            <div class="relative w-full aspect-video bg-slate-100 overflow-hidden cursor-pointer group" onclick="openLightboxById(${itemId})">
+              <img 
+                src="${imageUrl}" 
+                alt="${escapeHtml(item.title)}" 
+                class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+              >
+              <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-2.5">
+                <span class="text-white text-caption font-caption inline-flex items-center gap-1">
+                  <span class="material-symbols-outlined text-[16px]" data-icon="fullscreen">fullscreen</span>
+                  Tap to view photo
+                </span>
+              </div>
+            </div>
+          `;
+                }
+
+                // Category icon
+                let categoryIcon = 'help_outline';
+                if (item.category.includes('Smart Card')) categoryIcon = 'badge';
+                else if (item.category.includes('Keys')) categoryIcon = 'vpn_key';
+                else if (item.category.includes('Electronics')) categoryIcon = 'headphones';
+                else if (item.category.includes('Stationery')) categoryIcon = 'architecture';
+                else if (item.category.includes('Cycle')) categoryIcon = 'pedal_bike';
+
+                return `
+          <div class="bg-surface-white rounded-xl border border-border-slate shadow-sm hover:border-slate-300 hover:shadow-[0_2px_8px_-2px_rgba(15,23,42,0.08)] transition-all flex flex-col justify-between overflow-hidden relative ${isResolved ? 'opacity-75 bg-slate-50/50' : ''}">
+            
+            <div>
+              ${imageMarkup}
+
+              <div class="p-4">
+                <!-- Badges Row -->
+                <div class="flex items-center justify-between gap-2 mb-2.5">
+                  <div class="flex flex-wrap items-center gap-1.5">
+                    ${badgeHtml}
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-caption font-caption bg-surface-white text-ink-muted border border-border-slate">
+                      <span class="material-symbols-outlined text-[12px] text-ink-faint" data-icon="${categoryIcon}">${categoryIcon}</span>
+                      ${escapeHtml(item.category)}
+                    </span>
+                  </div>
+
+                  <!-- Bookmark Action -->
+                  <button onclick="toggleSaveItem(${itemId}, event)" class="p-1 rounded-full text-ink-faint hover:text-primary-container hover:bg-slate-100 transition-colors" title="${isSaved ? 'Unsave' : 'Save'}">
+                    <span class="material-symbols-outlined text-[18px]" ${isSaved ? 'style="font-variation-settings: \'FILL\' 1;"' : ''} data-icon="bookmark">bookmark</span>
+                  </button>
+                </div>
+
+                <!-- Title & Date -->
+                <h3 class="text-title-md font-title-md text-ink-primary font-semibold mb-1 leading-snug">
+                  ${escapeHtml(item.title)}
+                </h3>
+
+                <div class="flex items-center gap-2 text-caption font-caption text-ink-muted mb-2.5">
+                  <span class="inline-flex items-center gap-0.5">
+                    <span class="material-symbols-outlined text-[14px] text-ink-faint" data-icon="schedule">schedule</span>
+                    ${escapeHtml(formatDisplayDate(item.date_reported))}
+                  </span>
+                  <span>•</span>
+                  <span class="inline-flex items-center gap-0.5 text-ink-secondary">
+                    <span class="material-symbols-outlined text-[14px] text-rose-500" data-icon="pin_drop">pin_drop</span>
+                    ${escapeHtml(item.location)}
+                  </span>
+                </div>
+
+                <!-- Description Clues -->
+                <p class="text-body-sm font-body-sm text-ink-secondary line-clamp-3 mb-1">
+                  ${escapeHtml(item.description || '')}
+                </p>
+              </div>
+            </div>
+
+            <!-- Card Action Footer -->
+            <div class="px-4 py-3 bg-canvas-slate/80 border-t border-border-slate flex items-center justify-between gap-2">
+              
+              <!-- WhatsApp Contact (Public Action) -->
+              <a 
+                href="${waUrl}" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-label-sm font-label-sm font-medium bg-[#128C7E] hover:bg-[#075E54] active:scale-[0.98] text-white shadow-xs transition-all"
+                title="Message poster on WhatsApp"
+              >
+                <span class="material-symbols-outlined text-[16px]" data-icon="chat">chat</span>
+                <span>WhatsApp</span>
+              </a>
+
+              <!-- Device-Owner Actions (Conditional via localStorage tokens) -->
+              <div class="flex items-center gap-1.5">
+                ${isOwner ? `
+                  ${isResolved ? `
+                    <span class="px-2.5 py-1 rounded-md text-caption font-caption font-medium border border-border-slate bg-slate-100 text-ink-muted">
+                      Resolved
+                    </span>
+                  ` : `
+                    <button 
+                      onclick="resolveItem(${itemId})" 
+                      class="px-2.5 py-1 rounded-md text-caption font-caption font-medium border border-border-slate bg-surface-white hover:bg-slate-100 text-ink-secondary transition-colors cursor-pointer"
+                      title="Mark item as resolved"
+                    >
+                      Mark Resolved
+                    </button>
+                  `}
+
+                  <button 
+                    onclick="deleteItem(${itemId})" 
+                    class="p-1 rounded-md text-ink-faint hover:text-badge-lost-text hover:bg-rose-50 transition-colors cursor-pointer" 
+                    title="Delete notice"
+                  >
+                    <span class="material-symbols-outlined text-[16px]" data-icon="delete">delete</span>
+                  </button>
+                ` : `
+                  <span class="text-[11px] text-ink-faint flex items-center gap-0.5">
+                    <span class="material-symbols-outlined text-[12px]" data-icon="lock">lock</span>
+                    Protected
+                  </span>
+                `}
+              </div>
+            </div>
+
+          </div>
+        `;
+            }).join('');
+        }
+
+        // Modal Interactions
+        const reportModal = document.getElementById('reportModal');
+        const openReportBtn = document.getElementById('openReportBtn');
+        const closeReportBtn = document.getElementById('closeReportBtn');
+        const cancelReportBtn = document.getElementById('cancelReportBtn');
+        const reportForm = document.getElementById('reportForm');
+        const submitReportBtn = document.getElementById('submitReportBtn');
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const imagePreview = document.getElementById('imagePreview');
+        const previewContainer = document.getElementById('previewContainer');
+        const uploadPrompt = document.getElementById('uploadPrompt');
+        const removePhotoBtn = document.getElementById('removePhotoBtn');
+
+        function openModal() {
+            reportModal.classList.remove('hidden');
+            setTimeout(() => {
+                reportModal.classList.remove('opacity-0');
+            }, 10);
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function closeModal() {
+            reportModal.classList.add('opacity-0');
+            setTimeout(() => {
+                reportModal.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            }, 200);
+        }
+
+        function clearPhotoSelection() {
+            fileInput.value = '';
+            imagePreview.removeAttribute('src');
+            previewContainer.classList.add('hidden');
+            uploadPrompt.classList.remove('hidden');
+        }
+
+        openReportBtn.addEventListener('click', openModal);
+        closeReportBtn.addEventListener('click', closeModal);
+        cancelReportBtn.addEventListener('click', closeModal);
+
+        reportModal.addEventListener('click', (e) => {
+            if (e.target === reportModal) closeModal();
+        });
+
+        // Form Segmented Toggle: Lost vs Found
+        function setFormType(type) {
+            const typeInput = document.getElementById('itemTypeInput');
+            const btnLost = document.getElementById('formTypeLost');
+            const btnFound = document.getElementById('formTypeFound');
+
+            typeInput.value = type;
+
+            if (type === 'lost') {
+                btnLost.className = 'py-2 rounded-md text-label-md font-label-md font-semibold flex items-center justify-center gap-1.5 transition-all bg-badge-lost-bg text-badge-lost-text border border-badge-lost-border shadow-xs';
+                btnFound.className = 'py-2 rounded-md text-label-md font-label-md font-medium flex items-center justify-center gap-1.5 transition-all text-ink-muted hover:text-ink-primary';
+            } else {
+                btnFound.className = 'py-2 rounded-md text-label-md font-label-md font-semibold flex items-center justify-center gap-1.5 transition-all bg-badge-found-bg text-badge-found-text border border-badge-found-border shadow-xs';
+                btnLost.className = 'py-2 rounded-md text-label-md font-label-md font-medium flex items-center justify-center gap-1.5 transition-all text-ink-muted hover:text-ink-primary';
+            }
+        }
+
+        // Photo Upload Handling
+        dropZone.addEventListener('click', () => fileInput.click());
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    imagePreview.src = event.target.result;
+                    previewContainer.classList.remove('hidden');
+                    uploadPrompt.classList.add('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        removePhotoBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            clearPhotoSelection();
+        });
+
+        // Form Submission -> POST /api/items
+        reportForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const type = document.getElementById('itemTypeInput').value;
+            const title = document.getElementById('itemTitle').value.trim();
+            const category = document.getElementById('itemCategory').value;
+            const location = document.getElementById('itemLocation').value;
+            const dateReported = document.getElementById('itemDate').value;
+            const contactPhone = document.getElementById('itemPhone').value.trim();
+            const description = document.getElementById('itemDesc').value.trim();
+
+            const formData = new FormData();
+            formData.append('type', type);
+            formData.append('title', title);
+            formData.append('category', category);
+            formData.append('location', location);
+            formData.append('date_reported', dateReported);
+            formData.append('contact_phone', contactPhone);
+            if (description) {
+                formData.append('description', description);
+            }
+            if (fileInput.files && fileInput.files[0]) {
+                formData.append('image', fileInput.files[0]);
+            }
+
+            submitReportBtn.disabled = true;
+            submitReportBtn.textContent = 'Publishing...';
+
+            try {
+                const response = await fetch('/api/items', {
+                    method: 'POST',
+                    body: formData,
+                });
+                const data = await response.json().catch(() => ({}));
+                if (response.status !== 201) {
+                    throw new Error(data.detail || 'Failed to publish notice');
+                }
+
+                const tokens = getMyTokens();
+                tokens[data.item_id] = data.manage_token;
+                saveMyTokens(tokens);
+
+                reportForm.reset();
+                document.getElementById('itemDate').value = getTodayLocalDate();
+                clearPhotoSelection();
+                setFormType('lost');
+
+                closeModal();
+                showToast(`Notice for "${title}" published live!`, 'check_circle');
+                await loadItems();
+            } catch (err) {
+                showToast(err.message || 'Could not submit report', 'error');
+            } finally {
+                submitReportBtn.disabled = false;
+                submitReportBtn.textContent = 'Publish Notice';
+            }
+        });
+
+        // Owner Operations -> PATCH resolve & DELETE item
+        async function resolveItem(id) {
+            const tokens = getMyTokens();
+            const manageToken = tokens[String(id)];
+            if (!manageToken) {
+                showToast('Manage token not found for this item', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/items/${id}/resolve`, {
+                    method: 'PATCH',
+                    headers: {
+                        'X-Manage-Token': manageToken,
+                    },
+                });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) {
+                    throw new Error(data.detail || 'Failed to mark item as resolved');
+                }
+                showToast(data.message || 'Item marked as resolved', 'check_circle');
+                await loadItems();
+            } catch (err) {
+                showToast(err.message || 'Could not update item status', 'error');
+            }
+        }
+
+        async function deleteItem(id) {
+            if (!confirm('Are you sure you want to remove this notice from the board?')) {
+                return;
+            }
+
+            const tokens = getMyTokens();
+            const manageToken = tokens[String(id)];
+            if (!manageToken) {
+                showToast('Manage token not found for this item', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/items/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-Manage-Token': manageToken,
+                    },
+                });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) {
+                    throw new Error(data.detail || 'Failed to delete notice');
+                }
+
+                delete tokens[String(id)];
+                saveMyTokens(tokens);
+
+                showToast(data.message || 'Item deleted successfully', 'delete');
+                await loadItems();
+            } catch (err) {
+                showToast(err.message || 'Could not delete item', 'error');
+            }
+        }
+
+        // Lightbox / Image Preview
+        const lightboxModal = document.getElementById('lightboxModal');
+        const lightboxImg = document.getElementById('lightboxImg');
+        const lightboxCaption = document.getElementById('lightboxCaption');
+
+        function openLightboxById(id) {
+            const item = items.find(x => Number(x.id) === Number(id));
+            if (!item || !item.image_filename) return;
+            openLightbox(`/static/uploads/${encodeURIComponent(item.image_filename)}`, item.title);
+        }
+
+        function openLightbox(src, caption) {
+            lightboxImg.src = src;
+            lightboxCaption.textContent = caption;
+            lightboxModal.classList.remove('hidden');
+            setTimeout(() => {
+                lightboxModal.classList.remove('opacity-0');
+            }, 10);
+        }
+
+        function closeLightbox() {
+            lightboxModal.classList.add('opacity-0');
+            setTimeout(() => {
+                lightboxModal.classList.add('hidden');
+                lightboxImg.removeAttribute('src');
+            }, 200);
+        }
+
+        lightboxModal.addEventListener('click', (e) => {
+            if (e.target === lightboxModal) closeLightbox();
+        });
+
+        // Live Search Wiring (debounced)
+        const searchInput = document.getElementById('searchInput');
+        const clearSearchBtn = document.getElementById('clearSearchBtn');
+
+        searchInput.addEventListener('input', (e) => {
+            searchQuery = e.target.value;
+            clearSearchBtn.classList.toggle('hidden', searchQuery.length === 0);
+            clearTimeout(searchDebounceTimer);
+            searchDebounceTimer = setTimeout(() => {
+                loadItems();
+            }, 300);
+        });
+
+        clearSearchBtn.addEventListener('click', () => {
+            clearTimeout(searchDebounceTimer);
+            searchInput.value = '';
+            searchQuery = '';
+            clearSearchBtn.classList.add('hidden');
+            loadItems();
+        });
+
+        // Toast System
+        let toastTimeout;
+        function showToast(message, icon = 'info') {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMessage');
+            const toastIcon = document.getElementById('toastIcon');
+
+            toastMsg.textContent = message;
+            toastIcon.textContent = icon;
+            toastIcon.setAttribute('data-icon', icon);
+            toastIcon.className = icon === 'error'
+                ? 'material-symbols-outlined text-rose-400 text-[20px]'
+                : 'material-symbols-outlined text-emerald-400 text-[20px]';
+
+            clearTimeout(toastTimeout);
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            toastTimeout = setTimeout(() => {
+                hideToast();
+            }, 3500);
+        }
+
+        function hideToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.remove('translate-y-0', 'opacity-100');
+            toast.classList.add('translate-y-24', 'opacity-0');
+        }
+
+        // Helper: Escaping HTML
+        function escapeHtml(text) {
+            if (!text) return '';
+            return String(text)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // Initial Launch
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('itemDate').value = getTodayLocalDate();
+            updateMyPostsBadge();
+            loadItems();
+        });
+    </script>
+</body>
+
+</html>
