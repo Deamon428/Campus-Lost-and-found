@@ -1,0 +1,7 @@
+items.db*
+static/uploads/*
+!static/uploads/.gitkeep
+venv/
+.venv/
+__pycache__/
+.DS_Store
