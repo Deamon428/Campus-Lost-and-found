@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from contextlib import asynccontextmanager
 from datetime import date
+import logging
 import os
 from pathlib import Path
 import re
@@ -10,7 +11,17 @@ import sqlite3
 from typing import Annotated, Optional
 from uuid import uuid4
 
-from fastapi import Depends, FastAPI, File, Form, HTTPException, Query, UploadFile, status as http_status
+from fastapi import (
+    Depends,
+    FastAPI,
+    File,
+    Form,
+    Header,
+    HTTPException,
+    Query,
+    UploadFile,
+    status as http_status,
+)
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
@@ -28,6 +39,7 @@ UPLOAD_DIR = STATIC_DIR / "uploads"
 
 ALLOWED_IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"}
 UPLOAD_CHUNK_SIZE = 64 * 1024  # 64 KiB
+logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
@@ -273,3 +285,69 @@ def list_items(
 
     rows = db.execute(query, params).fetchall()
     return [dict(row) for row in rows]
+
+
+def _get_authorized_item(
+    db: sqlite3.Connection,
+    item_id: int,
+    x_manage_token: Optional[str],
+    token: Optional[str],
+) -> sqlite3.Row:
+    """Fetch an item by ID and verify the provided manage token."""
+    item = db.execute(
+        "SELECT id, status, image_filename, manage_token FROM items WHERE id = ?",
+        (item_id,),
+    ).fetchone()
+    if item is None:
+        raise HTTPException(
+            status_code=http_status.HTTP_404_NOT_FOUND,
+            detail="Item not found",
+        )
+
+    provided_token = (x_manage_token or "").strip() or (token or "").strip()
+    if not provided_token or not secrets.compare_digest(
+        provided_token, item["manage_token"]
+    ):
+        raise HTTPException(
+            status_code=http_status.HTTP_403_FORBIDDEN,
+            detail="Forbidden: Invalid manage token",
+        )
+    return item
+
+
+@app.patch("/api/items/{item_id}/resolve")
+def resolve_item(
+    item_id: int,
+    x_manage_token: Annotated[Optional[str], Header(alias="X-Manage-Token")] = None,
+    token: Annotated[Optional[str], Query()] = None,
+    db: sqlite3.Connection = Depends(get_db),
+) -> dict[str, str]:
+    """Mark an item as resolved after authenticating with manage_token."""
+    _get_authorized_item(db, item_id, x_manage_token, token)
+    db.execute("UPDATE items SET status = 'resolved' WHERE id = ?", (item_id,))
+    db.commit()
+    return {"status": "success", "message": "Item marked as resolved"}
+
+
+@app.delete("/api/items/{item_id}")
+def delete_item(
+    item_id: int,
+    x_manage_token: Annotated[Optional[str], Header(alias="X-Manage-Token")] = None,
+    token: Annotated[Optional[str], Query()] = None,
+    db: sqlite3.Connection = Depends(get_db),
+) -> dict[str, str]:
+    """Delete an item and any associated uploaded image after verifying manage_token."""
+    item = _get_authorized_item(db, item_id, x_manage_token, token)
+
+    image_filename = item["image_filename"]
+    if image_filename:
+        image_path = UPLOAD_DIR / Path(image_filename).name
+        if image_path.is_file():
+            try:
+                os.remove(image_path)
+            except OSError as exc:
+                logger.warning("Failed to remove upload %s: %s", image_path, exc)
+
+    db.execute("DELETE FROM items WHERE id = ?", (item_id,))
+    db.commit()
+    return {"status": "success", "message": "Item deleted successfully"}
