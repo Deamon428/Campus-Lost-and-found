@@ -168,6 +168,11 @@
             vertical-align: middle;
             line-height: 1;
         }
+
+        :focus-visible {
+            outline: 2px solid #4f46e5;
+            outline-offset: 2px;
+        }
     </style>
     <style>
         body {
@@ -201,8 +206,8 @@
             <div class="flex items-center gap-3">
                 <button
                     class="bg-primary-container hover:bg-interactive-hover active:scale-[0.98] text-white rounded-full px-4 py-1.5 text-label-md font-label-md transition-all shadow-sm flex items-center gap-1.5 cursor-pointer"
-                    id="openReportBtn">
-                    <span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
+                    id="openReportBtn" type="button">
+                    <span aria-hidden="true" class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
                     <span>Report</span>
                 </button>
             </div>
@@ -211,10 +216,10 @@
     <!-- MAIN WRAPPER -->
     <main class="max-w-5xl mx-auto px-margin md:px-margin-tablet pt-20 md:pt-22">
         <!-- Campus Trust Banner / Verification Callout -->
-        <div
+        <section aria-label="Campus verification notice"
             class="mb-5 p-3.5 bg-surface-white border-l-4 border-primary-container border border-border-slate rounded-lg flex items-start sm:items-center justify-between gap-3 shadow-[0_1px_2px_0_rgba(15,23,42,0.04)]">
             <div class="flex items-center gap-2.5">
-                <span class="material-symbols-outlined text-primary-container text-[20px]"
+                <span aria-hidden="true" class="material-symbols-outlined text-primary-container text-[20px]"
                     data-icon="verified_user">verified_user</span>
                 <p class="text-body-sm font-body-sm text-ink-secondary">
                     <strong class="font-semibold text-ink-primary">Verified Student Hub:</strong> WhatsApp direct
@@ -224,204 +229,228 @@
             </div>
             <span class="text-caption font-caption text-ink-faint shrink-0 hidden md:inline-block">Academic Year
                 2024-25</span>
-        </div>
+        </section>
         <!-- Feed Mode Switcher (Segmented Tab Control) -->
-        <div class="flex justify-center mb-6">
-            <div class="bg-slate-200/70 p-1 rounded-xl flex items-center gap-1 w-full max-w-md shadow-inner">
+        <section aria-label="Notice type switcher" class="flex justify-center mb-6">
+            <div class="bg-slate-200/70 p-1 rounded-xl flex items-center gap-1 w-full max-w-md shadow-inner"
+                role="group" aria-label="Filter notices by lost or found status">
                 <button
+                    aria-pressed="false"
                     class="flex-1 py-1.5 px-3 rounded-lg text-label-sm font-label-sm transition-all duration-150 flex items-center justify-center gap-1.5 text-ink-secondary hover:text-ink-primary"
-                    id="tabLost" onclick="setMode('lost')">
-                    <span class="w-2 h-2 rounded-full bg-badge-lost-text inline-block"></span>
+                    id="tabLost" type="button">
+                    <span aria-hidden="true" class="w-2 h-2 rounded-full bg-badge-lost-text inline-block"></span>
                     <span>Lost Items</span>
                     <span class="ml-1 text-[10px] px-1.5 py-0.2 rounded-full bg-white/60 font-bold"
                         id="lostCountBadge">0</span>
                 </button>
                 <button
+                    aria-pressed="false"
                     class="flex-1 py-1.5 px-3 rounded-lg text-label-sm font-label-sm transition-all duration-150 flex items-center justify-center gap-1.5 text-ink-secondary hover:text-ink-primary"
-                    id="tabFound" onclick="setMode('found')">
-                    <span class="w-2 h-2 rounded-full bg-badge-found-text inline-block"></span>
+                    id="tabFound" type="button">
+                    <span aria-hidden="true" class="w-2 h-2 rounded-full bg-badge-found-text inline-block"></span>
                     <span>Found Items</span>
                     <span class="ml-1 text-[10px] px-1.5 py-0.2 rounded-full bg-white/60 font-bold"
                         id="foundCountBadge">0</span>
                 </button>
                 <button
+                    aria-pressed="true"
                     class="flex-1 py-1.5 px-3 rounded-lg text-label-sm font-label-sm transition-all duration-150 flex items-center justify-center gap-1.5 bg-surface-white text-ink-primary font-semibold shadow-sm"
-                    id="tabAll" onclick="setMode('all')">
+                    id="tabAll" type="button">
                     <span>All</span>
                     <span class="ml-1 text-[10px] px-1.5 py-0.2 rounded-full bg-slate-100 font-bold text-ink-primary"
                         id="allCountBadge">0</span>
                 </button>
             </div>
-        </div>
+        </section>
         <!-- Filter & Search Section -->
-        <div class="space-y-3 mb-6">
+        <section aria-label="Search and filters" class="space-y-3 mb-6">
             <!-- Search Input -->
             <div class="relative">
-                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-ink-faint">
+                <label class="sr-only" for="searchInput">Search campus lost and found notices</label>
+                <span aria-hidden="true" class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-ink-faint">
                     <span class="material-symbols-outlined text-[20px]" data-icon="search">search</span>
                 </span>
                 <input
                     class="w-full h-11 pl-10 pr-10 bg-surface-white border border-border-slate rounded-lg text-body-md font-body-md text-ink-primary placeholder:text-ink-faint focus:outline-none focus:border-primary-container focus:ring-2 focus:ring-primary-container/20 transition-all shadow-[0_1px_2px_0_rgba(15,23,42,0.02)]"
                     id="searchInput" placeholder="Search by title (e.g. ID card, Casio, keys, Hostel J)..."
-                    type="text" />
+                    type="search" />
                 <button
+                    aria-label="Clear search query"
                     class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-ink-faint hover:text-ink-primary hidden"
-                    id="clearSearchBtn">
-                    <span class="material-symbols-outlined text-[18px]" data-icon="close">close</span>
+                    id="clearSearchBtn" type="button">
+                    <span aria-hidden="true" class="material-symbols-outlined text-[18px]" data-icon="close">close</span>
                 </button>
             </div>
             <!-- Categories Scrollable Bar -->
-            <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 text-label-sm font-label-sm">
+            <div aria-label="Filter by category" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 text-label-sm font-label-sm" role="group">
                 <span
                     class="text-caption font-caption text-ink-muted uppercase tracking-wider shrink-0 mr-1 hidden sm:inline">Category:</span>
                 <button
+                    aria-pressed="true"
                     class="cat-pill active shrink-0 px-3 py-1 rounded-full border border-primary-container bg-primary-container text-white transition-colors"
-                    data-cat="all" onclick="setCategory('all')">All Categories</button>
+                    data-cat="all" type="button">All Categories</button>
                 <button
+                    aria-pressed="false"
                     class="cat-pill shrink-0 px-3 py-1 rounded-full border border-border-slate bg-surface-white text-ink-secondary hover:bg-canvas-slate transition-colors"
-                    data-cat="Smart Card / ID" onclick="setCategory('Smart Card / ID')">Smart Card / ID</button>
+                    data-cat="Smart Card / ID" type="button">Smart Card / ID</button>
                 <button
+                    aria-pressed="false"
                     class="cat-pill shrink-0 px-3 py-1 rounded-full border border-border-slate bg-surface-white text-ink-secondary hover:bg-canvas-slate transition-colors"
-                    data-cat="Keys" onclick="setCategory('Keys')">Keys</button>
+                    data-cat="Keys" type="button">Keys</button>
                 <button
+                    aria-pressed="false"
                     class="cat-pill shrink-0 px-3 py-1 rounded-full border border-border-slate bg-surface-white text-ink-secondary hover:bg-canvas-slate transition-colors"
-                    data-cat="Electronics / Audio" onclick="setCategory('Electronics / Audio')">Electronics /
+                    data-cat="Electronics / Audio" type="button">Electronics /
                     Audio</button>
                 <button
+                    aria-pressed="false"
                     class="cat-pill shrink-0 px-3 py-1 rounded-full border border-border-slate bg-surface-white text-ink-secondary hover:bg-canvas-slate transition-colors"
-                    data-cat="Stationery / Drafter" onclick="setCategory('Stationery / Drafter')">Stationery /
+                    data-cat="Stationery / Drafter" type="button">Stationery /
                     Drafter</button>
                 <button
+                    aria-pressed="false"
                     class="cat-pill shrink-0 px-3 py-1 rounded-full border border-border-slate bg-surface-white text-ink-secondary hover:bg-canvas-slate transition-colors"
-                    data-cat="Cycle / Other" onclick="setCategory('Cycle / Other')">Cycle / Other</button>
+                    data-cat="Cycle / Other" type="button">Cycle / Other</button>
             </div>
             <!-- Campus Location Pills -->
-            <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 text-label-sm font-label-sm">
+            <div aria-label="Filter by campus location" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 text-label-sm font-label-sm" role="group">
                 <span
                     class="text-caption font-caption text-ink-muted uppercase tracking-wider shrink-0 mr-1 hidden sm:inline">Location:</span>
                 <button
+                    aria-pressed="true"
                     class="loc-pill active shrink-0 px-2.5 py-0.5 rounded-md border border-ink-primary bg-ink-primary text-white transition-colors"
-                    data-loc="all" onclick="setLocation('all')">All Locations</button>
+                    data-loc="all" type="button">All Locations</button>
                 <button
+                    aria-pressed="false"
                     class="loc-pill shrink-0 px-2.5 py-0.5 rounded-md border border-border-slate bg-surface-white text-ink-secondary hover:bg-canvas-slate transition-colors"
-                    data-loc="Central Library" onclick="setLocation('Central Library')">Central Library</button>
+                    data-loc="Central Library" type="button">Central Library</button>
                 <button
+                    aria-pressed="false"
                     class="loc-pill shrink-0 px-2.5 py-0.5 rounded-md border border-border-slate bg-surface-white text-ink-secondary hover:bg-canvas-slate transition-colors"
-                    data-loc="LT / LP Complex" onclick="setLocation('LT / LP Complex')">LT / LP Complex</button>
+                    data-loc="LT / LP Complex" type="button">LT / LP Complex</button>
                 <button
+                    aria-pressed="false"
                     class="loc-pill shrink-0 px-2.5 py-0.5 rounded-md border border-border-slate bg-surface-white text-ink-secondary hover:bg-canvas-slate transition-colors"
-                    data-loc="Hostel Area" onclick="setLocation('Hostel Area')">Hostel Area</button>
+                    data-loc="Hostel Area" type="button">Hostel Area</button>
                 <button
+                    aria-pressed="false"
                     class="loc-pill shrink-0 px-2.5 py-0.5 rounded-md border border-border-slate bg-surface-white text-ink-secondary hover:bg-canvas-slate transition-colors"
-                    data-loc="COS / Sports" onclick="setLocation('COS / Sports')">COS / Sports</button>
+                    data-loc="COS / Sports" type="button">COS / Sports</button>
                 <button
+                    aria-pressed="false"
                     class="loc-pill shrink-0 px-2.5 py-0.5 rounded-md border border-border-slate bg-surface-white text-ink-secondary hover:bg-canvas-slate transition-colors"
-                    data-loc="Other" onclick="setLocation('Other')">Other</button>
+                    data-loc="Other" type="button">Other</button>
             </div>
-        </div>
+        </section>
         <!-- Active Filters Feedback & Quick Reset -->
-        <div class="hidden items-center justify-between text-body-sm font-body-sm text-ink-muted mb-4 px-1"
+        <div aria-live="polite" class="hidden items-center justify-between text-body-sm font-body-sm text-ink-muted mb-4 px-1"
             id="filterStatus">
             <span id="filterSummaryText">Showing filtered results</span>
             <button
                 class="text-primary-container font-semibold hover:underline flex items-center gap-1 text-caption font-caption"
-                onclick="resetFilters()">
-                <span class="material-symbols-outlined text-[14px]" data-icon="refresh">refresh</span>
+                id="resetFiltersStatusBtn" type="button">
+                <span aria-hidden="true" class="material-symbols-outlined text-[14px]" data-icon="refresh">refresh</span>
                 Reset filters
             </button>
         </div>
         <!-- ITEM FEED CONTAINER -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="itemsGrid">
-            <!-- Dynamic Item Cards will be rendered here -->
-        </div>
-        <!-- Empty State -->
-        <div class="hidden text-center py-16 px-4 bg-surface-white rounded-xl border border-dashed border-border-slate mt-4"
-            id="emptyState">
-            <div
-                class="w-14 h-14 mx-auto mb-3 rounded-full bg-surface-container-low text-primary-container flex items-center justify-center">
-                <span class="material-symbols-outlined text-[28px]" data-icon="find_in_page">find_in_page</span>
+        <section aria-label="Lost and found items feed">
+            <div aria-live="polite" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="itemsGrid">
+                <!-- Dynamic Item Cards will be rendered here -->
             </div>
-            <h3 class="text-headline-sm font-headline-sm text-ink-primary mb-1">No reports matched your query</h3>
-            <p class="text-body-sm font-body-sm text-ink-muted max-w-sm mx-auto mb-4">Try broadening your search term or
-                selecting 'All' in categories and locations.</p>
-            <button
-                class="inline-flex items-center gap-1.5 px-4 py-2 border border-border-slate rounded-lg text-label-md font-label-md text-ink-secondary bg-surface-white hover:bg-canvas-slate transition-colors"
-                onclick="resetFilters()">
-                <span class="material-symbols-outlined text-[16px]" data-icon="refresh">refresh</span>
-                Clear all filters
-            </button>
-        </div>
+            <!-- Empty State -->
+            <div class="hidden text-center py-16 px-4 bg-surface-white rounded-xl border border-dashed border-border-slate mt-4"
+                id="emptyState">
+                <div
+                    class="w-14 h-14 mx-auto mb-3 rounded-full bg-surface-container-low text-primary-container flex items-center justify-center">
+                    <span aria-hidden="true" class="material-symbols-outlined text-[28px]" data-icon="find_in_page">find_in_page</span>
+                </div>
+                <h3 class="text-headline-sm font-headline-sm text-ink-primary mb-1">No reports matched your query</h3>
+                <p class="text-body-sm font-body-sm text-ink-muted max-w-sm mx-auto mb-4">Try broadening your search term or
+                    selecting 'All' in categories and locations.</p>
+                <button
+                    class="inline-flex items-center gap-1.5 px-4 py-2 border border-border-slate rounded-lg text-label-md font-label-md text-ink-secondary bg-surface-white hover:bg-canvas-slate transition-colors"
+                    id="clearAllFiltersBtn" type="button">
+                    <span aria-hidden="true" class="material-symbols-outlined text-[16px]" data-icon="refresh">refresh</span>
+                    Clear all filters
+                </button>
+            </div>
+        </section>
     </main>
     <!-- BOTTOM NAVIGATION BAR (Shared Components JSON Anchor) -->
-    <nav
+    <nav aria-label="Mobile navigation"
         class="fixed bottom-0 left-0 right-0 w-full z-40 bg-surface-white border-t border-border-slate shadow-[0_-2px_10px_rgba(0,0,0,0.03)] md:hidden">
         <div class="flex justify-around items-center h-14 max-w-lg mx-auto px-margin">
             <!-- Feed (Active) -->
-            <button class="flex flex-col items-center justify-center text-primary-container font-semibold gap-0.5 py-1"
-                id="bottomNavFeed" onclick="setTab('feed')">
-                <span class="material-symbols-outlined text-[20px]" data-icon="dynamic_feed">dynamic_feed</span>
+            <button aria-current="page" class="flex flex-col items-center justify-center text-primary-container font-semibold gap-0.5 py-1"
+                id="bottomNavFeed" type="button">
+                <span aria-hidden="true" class="material-symbols-outlined text-[20px]" data-icon="dynamic_feed">dynamic_feed</span>
                 <span class="text-label-sm font-label-sm">Feed</span>
             </button>
             <!-- Search -->
             <button
                 class="flex flex-col items-center justify-center text-ink-muted hover:text-interactive-hover gap-0.5 py-1 transition-colors"
-                id="bottomNavSearch" onclick="focusSearch()">
-                <span class="material-symbols-outlined text-[20px]" data-icon="search">search</span>
+                id="bottomNavSearch" type="button">
+                <span aria-hidden="true" class="material-symbols-outlined text-[20px]" data-icon="search">search</span>
                 <span class="text-label-sm font-label-sm">Search</span>
             </button>
             <!-- My Posts -->
             <button
                 class="flex flex-col items-center justify-center text-ink-muted hover:text-interactive-hover gap-0.5 py-1 transition-colors relative"
-                id="bottomNavMyPosts" onclick="toggleMyPostsView()">
-                <span class="material-symbols-outlined text-[20px]" data-icon="inventory_2">inventory_2</span>
+                id="bottomNavMyPosts" type="button">
+                <span aria-hidden="true" class="material-symbols-outlined text-[20px]" data-icon="inventory_2">inventory_2</span>
                 <span class="text-label-sm font-label-sm">My Posts</span>
-                <span class="absolute top-0.5 right-2 w-2 h-2 rounded-full bg-primary-container hidden"
+                <span aria-hidden="true" class="absolute top-0.5 right-2 w-2 h-2 rounded-full bg-primary-container hidden"
                     id="myPostsCountBadge"></span>
             </button>
             <!-- Saved -->
             <button
                 class="flex flex-col items-center justify-center text-ink-muted hover:text-interactive-hover gap-0.5 py-1 transition-colors"
-                id="bottomNavSaved" onclick="toggleSavedView()">
-                <span class="material-symbols-outlined text-[20px]" data-icon="bookmark">bookmark</span>
+                id="bottomNavSaved" type="button">
+                <span aria-hidden="true" class="material-symbols-outlined text-[20px]" data-icon="bookmark">bookmark</span>
                 <span class="text-label-sm font-label-sm">Saved</span>
             </button>
         </div>
     </nav>
     <!-- REPORT ITEM MODAL -->
-    <div class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-200"
-        id="reportModal">
+    <div aria-labelledby="reportModalTitle" aria-modal="true"
+        class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-200"
+        id="reportModal" role="dialog">
         <div
             class="bg-surface-white rounded-xl border border-border-slate shadow-xl w-full max-w-lg max-h-[813px] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150">
             <!-- Modal Header -->
             <div class="p-4 border-b border-border-slate flex items-center justify-between">
                 <div>
-                    <h2 class="text-headline-sm font-headline-sm text-ink-primary">File a Campus Notice</h2>
+                    <h2 class="text-headline-sm font-headline-sm text-ink-primary" id="reportModalTitle">File a Campus Notice</h2>
                     <p class="text-caption font-caption text-ink-muted">Posts reach student bulletin feeds immediately
                     </p>
                 </div>
                 <button
+                    aria-label="Close report modal"
                     class="text-ink-muted hover:text-ink-primary p-1 rounded-lg hover:bg-canvas-slate transition-colors"
-                    id="closeReportBtn">
-                    <span class="material-symbols-outlined text-[22px]" data-icon="close">close</span>
+                    id="closeReportBtn" type="button">
+                    <span aria-hidden="true" class="material-symbols-outlined text-[22px]" data-icon="close">close</span>
                 </button>
             </div>
             <!-- Modal Body -->
             <form class="p-4 sm:p-5 overflow-y-auto space-y-4 text-ink-secondary" id="reportForm">
                 <!-- Toggle: I Lost vs I Found -->
                 <div>
-                    <label class="block text-label-sm font-label-sm text-ink-primary mb-1.5">What type of notice is
-                        this?</label>
-                    <div class="grid grid-cols-2 gap-2 p-1 bg-slate-100 rounded-lg">
+                    <span class="block text-label-sm font-label-sm text-ink-primary mb-1.5" id="noticeTypeLabel">What type of notice is
+                        this?</span>
+                    <div aria-labelledby="noticeTypeLabel" class="grid grid-cols-2 gap-2 p-1 bg-slate-100 rounded-lg" role="group">
                         <button
+                            aria-pressed="true"
                             class="py-2 rounded-md text-label-md font-label-md font-semibold flex items-center justify-center gap-1.5 transition-all bg-badge-lost-bg text-badge-lost-text border border-badge-lost-border shadow-xs"
-                            id="formTypeLost" onclick="setFormType('lost')" type="button">
-                            <span class="w-2 h-2 rounded-full bg-badge-lost-text"></span>
+                            id="formTypeLost" type="button">
+                            <span aria-hidden="true" class="w-2 h-2 rounded-full bg-badge-lost-text"></span>
                             I Lost Something
                         </button>
                         <button
+                            aria-pressed="false"
                             class="py-2 rounded-md text-label-md font-label-md font-medium flex items-center justify-center gap-1.5 transition-all text-ink-muted hover:text-ink-primary"
-                            id="formTypeFound" onclick="setFormType('found')" type="button">
-                            <span class="w-2 h-2 rounded-full bg-badge-found-text"></span>
+                            id="formTypeFound" type="button">
+                            <span aria-hidden="true" class="w-2 h-2 rounded-full bg-badge-found-text"></span>
                             I Found Something
                         </button>
                     </div>
@@ -502,25 +531,27 @@
                 </div>
                 <!-- Photo Upload Box -->
                 <div>
-                    <label class="block text-label-sm font-label-sm text-ink-secondary mb-1">Optional Photo</label>
-                    <div class="border-2 border-dashed border-border-slate hover:border-primary-container rounded-lg p-4 text-center cursor-pointer transition-colors bg-canvas-slate/50"
-                        id="dropZone">
+                    <label class="block text-label-sm font-label-sm text-ink-secondary mb-1" for="fileInput">Optional Photo</label>
+                    <div aria-label="Upload optional item photo"
+                        class="border-2 border-dashed border-border-slate hover:border-primary-container rounded-lg p-4 text-center cursor-pointer transition-colors bg-canvas-slate/50"
+                        id="dropZone" role="button" tabindex="0">
                         <input accept=".jpg,.jpeg,.png,.webp" class="hidden" id="fileInput" type="file" />
                         <div class="flex flex-col items-center justify-center gap-1.5 py-1" id="uploadPrompt">
-                            <span class="material-symbols-outlined text-ink-faint text-[28px]"
+                            <span aria-hidden="true" class="material-symbols-outlined text-ink-faint text-[28px]"
                                 data-icon="add_photo_alternate">add_photo_alternate</span>
                             <p class="text-body-sm font-body-sm text-ink-primary font-medium">Click or tap to upload
                                 photo</p>
-                            <p class="text-caption font-caption text-ink-muted">Supports JPG, PNG, WebP</p>
+                            <p class="text-caption font-caption text-ink-muted">Supports JPG, PNG, WebP up to 5 MB</p>
                         </div>
                         <!-- Photo Preview -->
                         <div class="hidden relative max-h-40 overflow-hidden rounded-md" id="previewContainer">
-                            <img alt="Uploaded Preview" class="w-full h-36 object-cover rounded-md"
+                            <img alt="Preview of selected item photo" class="w-full h-36 object-cover rounded-md"
                                 id="imagePreview" src="" />
                             <button
+                                aria-label="Remove selected photo"
                                 class="absolute top-2 right-2 p-1 bg-slate-900/70 hover:bg-slate-900 text-white rounded-full transition-colors"
                                 id="removePhotoBtn" type="button">
-                                <span class="material-symbols-outlined text-[16px]" data-icon="close">close</span>
+                                <span aria-hidden="true" class="material-symbols-outlined text-[16px]" data-icon="close">close</span>
                             </button>
                         </div>
                     </div>
@@ -542,34 +573,37 @@
         </div>
     </div>
     <!-- LIGHTBOX / IMAGE MODAL -->
-    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-200"
-        id="lightboxModal">
+    <div aria-labelledby="lightboxCaption" aria-modal="true"
+        class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-200"
+        id="lightboxModal" role="dialog">
         <div
             class="relative max-w-2xl max-h-[795px] bg-surface-white rounded-xl overflow-hidden shadow-2xl flex flex-col">
             <button
+                aria-label="Close image preview"
                 class="absolute top-3 right-3 z-10 p-1.5 bg-black/60 hover:bg-black text-white rounded-full transition-colors cursor-pointer"
-                onclick="closeLightbox()">
-                <span class="material-symbols-outlined text-[20px]" data-icon="close">close</span>
+                id="closeLightboxIconBtn" type="button">
+                <span aria-hidden="true" class="material-symbols-outlined text-[20px]" data-icon="close">close</span>
             </button>
-            <img alt="Enlarged campus item preview" class="max-h-[663px] w-auto object-contain bg-slate-950"
+            <img alt="Enlarged item photo preview" class="max-h-[663px] w-auto object-contain bg-slate-950"
                 id="lightboxImg" src="" />
             <div class="p-3 bg-surface-white border-t border-border-slate flex justify-between items-center">
                 <span class="text-title-md font-title-md text-ink-primary truncate pr-4" id="lightboxCaption"></span>
                 <button class="text-caption font-caption text-ink-muted hover:text-ink-primary shrink-0"
-                    onclick="closeLightbox()">Close Preview</button>
+                    id="closeLightboxTextBtn" type="button">Close Preview</button>
             </div>
         </div>
     </div>
     <!-- TOAST NOTIFICATION CONTAINER -->
-    <div class="fixed bottom-20 md:bottom-6 right-4 left-4 md:left-auto md:w-80 z-50 bg-slate-900 text-white px-4 py-3 rounded-lg shadow-lg flex items-center justify-between gap-3 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none"
-        id="toast">
+    <div aria-atomic="true" aria-live="polite"
+        class="fixed bottom-20 md:bottom-6 right-4 left-4 md:left-auto md:w-80 z-50 bg-slate-900 text-white px-4 py-3 rounded-lg shadow-lg flex items-center justify-between gap-3 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none"
+        id="toast" role="status">
         <div class="flex items-center gap-2.5">
-            <span class="material-symbols-outlined text-emerald-400 text-[20px]" data-icon="check_circle"
+            <span aria-hidden="true" class="material-symbols-outlined text-emerald-400 text-[20px]" data-icon="check_circle"
                 id="toastIcon">check_circle</span>
             <span class="text-body-sm font-body-sm" id="toastMessage">Notice posted successfully</span>
         </div>
-        <button class="text-slate-400 hover:text-white pointer-events-auto" onclick="hideToast()">
-            <span class="material-symbols-outlined text-[16px]" data-icon="close">close</span>
+        <button aria-label="Dismiss notification" class="text-slate-400 hover:text-white pointer-events-auto" id="hideToastBtn" type="button">
+            <span aria-hidden="true" class="material-symbols-outlined text-[16px]" data-icon="close">close</span>
         </button>
     </div>
     <!-- JAVASCRIPT APPLICATION CORE -->
@@ -577,6 +611,8 @@
         // Local storage keys for ownership tokens and bookmarks
         const TOKEN_KEY = 'campus_lostfound_tokens';
         const SAVED_ITEMS_KEY = 'campus_lostfound_saved';
+        const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+        const DEBOUNCE_DELAY_MS = 250;
 
         // Application State
         let items = [];
@@ -585,8 +621,22 @@
         let currentLocation = 'all';
         let searchQuery = '';
         let viewMode = 'feed'; // 'feed', 'myposts', 'saved'
-        let searchDebounceTimer = null;
+        let filterDebounceTimer = null;
         let activeFetchController = null;
+        let activeDialog = null;
+        let lastFocusedElement = null;
+
+        // Strict HTML sanitizer helper for any string contexts
+        function escapeHTML(str) {
+            if (str === null || str === undefined) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;')
+                .replace(/\//g, '&#x2F;');
+        }
 
         function getTodayLocalDate() {
             const now = new Date();
@@ -665,6 +715,13 @@
             document.getElementById('allCountBadge').textContent = openItems.length;
         }
 
+        function scheduleLoadItems(delayMs = DEBOUNCE_DELAY_MS) {
+            clearTimeout(filterDebounceTimer);
+            filterDebounceTimer = setTimeout(() => {
+                loadItems();
+            }, delayMs);
+        }
+
         async function refreshOpenCounts(signal) {
             try {
                 const response = await fetch('/api/items', { signal });
@@ -684,6 +741,9 @@
             }
             activeFetchController = new AbortController();
             const { signal } = activeFetchController;
+
+            const grid = document.getElementById('itemsGrid');
+            grid.setAttribute('aria-busy', 'true');
 
             const params = new URLSearchParams();
             const isPersonalView = viewMode === 'myposts' || viewMode === 'saved';
@@ -711,7 +771,8 @@
             try {
                 const response = await fetch(url, { signal });
                 if (!response.ok) {
-                    throw new Error('Failed to load campus notices');
+                    const errBody = await response.json().catch(() => ({}));
+                    throw new Error(errBody.detail || 'Failed to load campus notices');
                 }
                 items = await response.json();
 
@@ -726,58 +787,71 @@
                 if (err.name === 'AbortError') return;
                 console.error(err);
                 showToast(err.message || 'Could not reach server', 'error');
+            } finally {
+                grid.setAttribute('aria-busy', 'false');
             }
         }
 
-        // Filter Controls
-        function setMode(mode) {
-            currentMode = mode;
-
+        function updateModeButtonUI(mode) {
             const tabLost = document.getElementById('tabLost');
             const tabFound = document.getElementById('tabFound');
             const tabAll = document.getElementById('tabAll');
+            const inactiveClass = 'flex-1 py-1.5 px-3 rounded-lg text-label-sm font-label-sm transition-all duration-150 flex items-center justify-center gap-1.5 text-ink-secondary hover:text-ink-primary';
+            const activeClass = 'flex-1 py-1.5 px-3 rounded-lg text-label-sm font-label-sm transition-all duration-150 flex items-center justify-center gap-1.5 bg-surface-white text-ink-primary font-semibold shadow-sm border border-border-slate/40';
 
-            [tabLost, tabFound, tabAll].forEach(t => {
-                t.className = 'flex-1 py-1.5 px-3 rounded-lg text-label-sm font-label-sm transition-all duration-150 flex items-center justify-center gap-1.5 text-ink-secondary hover:text-ink-primary';
+            const mapping = [
+                [tabLost, 'lost'],
+                [tabFound, 'found'],
+                [tabAll, 'all'],
+            ];
+            mapping.forEach(([el, key]) => {
+                const isActive = key === mode;
+                el.className = isActive ? activeClass : inactiveClass;
+                el.setAttribute('aria-pressed', String(isActive));
             });
+        }
 
-            if (mode === 'lost') {
-                tabLost.className = 'flex-1 py-1.5 px-3 rounded-lg text-label-sm font-label-sm transition-all duration-150 flex items-center justify-center gap-1.5 bg-surface-white text-ink-primary font-semibold shadow-sm border border-border-slate/40';
-            } else if (mode === 'found') {
-                tabFound.className = 'flex-1 py-1.5 px-3 rounded-lg text-label-sm font-label-sm transition-all duration-150 flex items-center justify-center gap-1.5 bg-surface-white text-ink-primary font-semibold shadow-sm border border-border-slate/40';
-            } else {
-                tabAll.className = 'flex-1 py-1.5 px-3 rounded-lg text-label-sm font-label-sm transition-all duration-150 flex items-center justify-center gap-1.5 bg-surface-white text-ink-primary font-semibold shadow-sm border border-border-slate/40';
-            }
+        function updateCategoryPillsUI(cat) {
+            document.querySelectorAll('.cat-pill').forEach(btn => {
+                const isActive = btn.dataset.cat === cat;
+                btn.className = isActive
+                    ? 'cat-pill active shrink-0 px-3 py-1 rounded-full border border-primary-container bg-primary-container text-white transition-colors'
+                    : 'cat-pill shrink-0 px-3 py-1 rounded-full border border-border-slate bg-surface-white text-ink-secondary hover:bg-canvas-slate transition-colors';
+                btn.setAttribute('aria-pressed', String(isActive));
+            });
+        }
 
-            loadItems();
+        function updateLocationPillsUI(loc) {
+            document.querySelectorAll('.loc-pill').forEach(btn => {
+                const isActive = btn.dataset.loc === loc;
+                btn.className = isActive
+                    ? 'loc-pill active shrink-0 px-2.5 py-0.5 rounded-md border border-ink-primary bg-ink-primary text-white transition-colors'
+                    : 'loc-pill shrink-0 px-2.5 py-0.5 rounded-md border border-border-slate bg-surface-white text-ink-secondary hover:bg-canvas-slate transition-colors';
+                btn.setAttribute('aria-pressed', String(isActive));
+            });
+        }
+
+        // Filter Controls (debounced by 250ms)
+        function setMode(mode) {
+            currentMode = mode;
+            updateModeButtonUI(mode);
+            scheduleLoadItems();
         }
 
         function setCategory(cat) {
             currentCategory = cat;
-            document.querySelectorAll('.cat-pill').forEach(btn => {
-                if (btn.dataset.cat === cat) {
-                    btn.className = 'cat-pill active shrink-0 px-3 py-1 rounded-full border border-primary-container bg-primary-container text-white transition-colors';
-                } else {
-                    btn.className = 'cat-pill shrink-0 px-3 py-1 rounded-full border border-border-slate bg-surface-white text-ink-secondary hover:bg-canvas-slate transition-colors';
-                }
-            });
-            loadItems();
+            updateCategoryPillsUI(cat);
+            scheduleLoadItems();
         }
 
         function setLocation(loc) {
             currentLocation = loc;
-            document.querySelectorAll('.loc-pill').forEach(btn => {
-                if (btn.dataset.loc === loc) {
-                    btn.className = 'loc-pill active shrink-0 px-2.5 py-0.5 rounded-md border border-ink-primary bg-ink-primary text-white transition-colors';
-                } else {
-                    btn.className = 'loc-pill shrink-0 px-2.5 py-0.5 rounded-md border border-border-slate bg-surface-white text-ink-secondary hover:bg-canvas-slate transition-colors';
-                }
-            });
-            loadItems();
+            updateLocationPillsUI(loc);
+            scheduleLoadItems();
         }
 
         function resetFilters() {
-            clearTimeout(searchDebounceTimer);
+            clearTimeout(filterDebounceTimer);
             currentMode = 'all';
             currentCategory = 'all';
             currentLocation = 'all';
@@ -786,22 +860,9 @@
             document.getElementById('searchInput').value = '';
             document.getElementById('clearSearchBtn').classList.add('hidden');
 
-            // Reset tab and pill UI classes without triggering duplicate fetches
-            document.getElementById('tabLost').className = 'flex-1 py-1.5 px-3 rounded-lg text-label-sm font-label-sm transition-all duration-150 flex items-center justify-center gap-1.5 text-ink-secondary hover:text-ink-primary';
-            document.getElementById('tabFound').className = 'flex-1 py-1.5 px-3 rounded-lg text-label-sm font-label-sm transition-all duration-150 flex items-center justify-center gap-1.5 text-ink-secondary hover:text-ink-primary';
-            document.getElementById('tabAll').className = 'flex-1 py-1.5 px-3 rounded-lg text-label-sm font-label-sm transition-all duration-150 flex items-center justify-center gap-1.5 bg-surface-white text-ink-primary font-semibold shadow-sm border border-border-slate/40';
-
-            document.querySelectorAll('.cat-pill').forEach(btn => {
-                btn.className = btn.dataset.cat === 'all'
-                    ? 'cat-pill active shrink-0 px-3 py-1 rounded-full border border-primary-container bg-primary-container text-white transition-colors'
-                    : 'cat-pill shrink-0 px-3 py-1 rounded-full border border-border-slate bg-surface-white text-ink-secondary hover:bg-canvas-slate transition-colors';
-            });
-            document.querySelectorAll('.loc-pill').forEach(btn => {
-                btn.className = btn.dataset.loc === 'all'
-                    ? 'loc-pill active shrink-0 px-2.5 py-0.5 rounded-md border border-ink-primary bg-ink-primary text-white transition-colors'
-                    : 'loc-pill shrink-0 px-2.5 py-0.5 rounded-md border border-border-slate bg-surface-white text-ink-secondary hover:bg-canvas-slate transition-colors';
-            });
-
+            updateModeButtonUI('all');
+            updateCategoryPillsUI('all');
+            updateLocationPillsUI('all');
             setTab('feed');
         }
 
@@ -812,17 +873,28 @@
             const navMyPosts = document.getElementById('bottomNavMyPosts');
             const navSaved = document.getElementById('bottomNavSaved');
 
-            [navFeed, navSearch, navMyPosts, navSaved].forEach(el => {
-                el.className = 'flex flex-col items-center justify-center text-ink-muted hover:text-interactive-hover gap-0.5 py-1 transition-colors';
+            const inactiveNavClass = 'flex flex-col items-center justify-center text-ink-muted hover:text-interactive-hover gap-0.5 py-1 transition-colors';
+            const activeNavClass = 'flex flex-col items-center justify-center text-primary-container font-semibold gap-0.5 py-1';
+
+            [
+                [navFeed, 'feed'],
+                [navSearch, 'search'],
+                [navMyPosts, 'myposts'],
+                [navSaved, 'saved'],
+            ].forEach(([el, key]) => {
+                const isActive = key === tab;
+                el.className = isActive ? activeNavClass : inactiveNavClass;
+                if (key === 'myposts') {
+                    el.classList.add('relative');
+                }
+                if (isActive) {
+                    el.setAttribute('aria-current', 'page');
+                } else {
+                    el.removeAttribute('aria-current');
+                }
             });
 
-            if (tab === 'feed') {
-                navFeed.className = 'flex flex-col items-center justify-center text-primary-container font-semibold gap-0.5 py-1';
-            } else if (tab === 'myposts') {
-                navMyPosts.className = 'flex flex-col items-center justify-center text-primary-container font-semibold gap-0.5 py-1';
-            } else if (tab === 'saved') {
-                navSaved.className = 'flex flex-col items-center justify-center text-primary-container font-semibold gap-0.5 py-1';
-            }
+            clearTimeout(filterDebounceTimer);
             loadItems();
         }
 
@@ -837,7 +909,215 @@
         function focusSearch() {
             const input = document.getElementById('searchInput');
             input.focus();
-            window.scrollTo({ top: input.offsetTop - 80, behavior: 'smooth' });
+            window.scrollTo({ top: Math.max(0, input.offsetTop - 80), behavior: 'smooth' });
+        }
+
+        function createMaterialIcon(name, classes) {
+            const span = document.createElement('span');
+            span.setAttribute('aria-hidden', 'true');
+            span.setAttribute('data-icon', name);
+            span.className = `material-symbols-outlined ${classes}`;
+            span.textContent = name;
+            return span;
+        }
+
+        function getCategoryIconName(category) {
+            if (category.includes('Smart Card')) return 'badge';
+            if (category.includes('Keys')) return 'vpn_key';
+            if (category.includes('Electronics')) return 'headphones';
+            if (category.includes('Stationery')) return 'architecture';
+            if (category.includes('Cycle')) return 'pedal_bike';
+            return 'help_outline';
+        }
+
+        // Safe DOM node builder using textContent (no raw HTML interpolation)
+        function createItemCard(item, isOwner, isSaved) {
+            const itemId = Number(item.id);
+            const isLost = item.type === 'lost';
+            const isResolved = item.status === 'resolved';
+
+            const card = document.createElement('article');
+            card.className = `bg-surface-white rounded-xl border border-border-slate shadow-sm hover:border-slate-300 hover:shadow-[0_2px_8px_-2px_rgba(15,23,42,0.08)] transition-all flex flex-col justify-between overflow-hidden relative ${isResolved ? 'opacity-75 bg-slate-50/50' : ''}`;
+
+            const topWrap = document.createElement('div');
+
+            // Optional lazy-loaded photo
+            if (item.image_filename) {
+                const imageUrl = `/static/uploads/${encodeURIComponent(item.image_filename)}`;
+                const imgBox = document.createElement('div');
+                imgBox.className = 'relative w-full aspect-video bg-slate-100 overflow-hidden cursor-pointer group';
+                imgBox.setAttribute('role', 'button');
+                imgBox.setAttribute('tabindex', '0');
+                imgBox.setAttribute('aria-label', `View larger photo for ${item.title}`);
+
+                const openImg = () => openLightboxById(itemId);
+                imgBox.addEventListener('click', openImg);
+                imgBox.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        openImg();
+                    }
+                });
+
+                const img = document.createElement('img');
+                img.src = imageUrl;
+                img.alt = `Photo of ${item.title}`;
+                img.loading = 'lazy';
+                img.decoding = 'async';
+                img.className = 'w-full h-full object-cover transition-transform duration-300 group-hover:scale-105';
+
+                const overlay = document.createElement('div');
+                overlay.className = 'absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-2.5';
+                const overlayLabel = document.createElement('span');
+                overlayLabel.className = 'text-white text-caption font-caption inline-flex items-center gap-1';
+                overlayLabel.appendChild(createMaterialIcon('fullscreen', 'text-[16px]'));
+                overlayLabel.appendChild(document.createTextNode('Tap to view photo'));
+                overlay.appendChild(overlayLabel);
+
+                imgBox.append(img, overlay);
+                topWrap.appendChild(imgBox);
+            }
+
+            const body = document.createElement('div');
+            body.className = 'p-4';
+
+            // Badges row
+            const badgesRow = document.createElement('div');
+            badgesRow.className = 'flex items-center justify-between gap-2 mb-2.5';
+
+            const badgeGroup = document.createElement('div');
+            badgeGroup.className = 'flex flex-wrap items-center gap-1.5';
+
+            const statusBadge = document.createElement('span');
+            const statusDot = document.createElement('span');
+            statusDot.setAttribute('aria-hidden', 'true');
+            if (isResolved) {
+                statusBadge.className = 'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-badge font-badge bg-badge-claimed-bg text-badge-claimed-text border border-badge-claimed-border';
+                statusDot.className = 'w-1.5 h-1.5 rounded-full bg-slate-500';
+                statusBadge.append(statusDot, document.createTextNode('RESOLVED / CLAIMED'));
+            } else if (isLost) {
+                statusBadge.className = 'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-badge font-badge bg-badge-lost-bg text-badge-lost-text border border-badge-lost-border';
+                statusDot.className = 'w-1.5 h-1.5 rounded-full bg-badge-lost-text';
+                statusBadge.append(statusDot, document.createTextNode('LOST'));
+            } else {
+                statusBadge.className = 'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-badge font-badge bg-badge-found-bg text-badge-found-text border border-badge-found-border';
+                statusDot.className = 'w-1.5 h-1.5 rounded-full bg-badge-found-text';
+                statusBadge.append(statusDot, document.createTextNode('FOUND'));
+            }
+
+            const categoryBadge = document.createElement('span');
+            categoryBadge.className = 'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-caption font-caption bg-surface-white text-ink-muted border border-border-slate';
+            categoryBadge.appendChild(createMaterialIcon(getCategoryIconName(item.category), 'text-[12px] text-ink-faint'));
+            categoryBadge.appendChild(document.createTextNode(item.category));
+
+            badgeGroup.append(statusBadge, categoryBadge);
+
+            const bookmarkBtn = document.createElement('button');
+            bookmarkBtn.type = 'button';
+            bookmarkBtn.className = 'p-1 rounded-full text-ink-faint hover:text-primary-container hover:bg-slate-100 transition-colors';
+            bookmarkBtn.title = isSaved ? 'Remove bookmark' : 'Bookmark notice';
+            bookmarkBtn.setAttribute('aria-label', `${isSaved ? 'Remove bookmark for' : 'Bookmark'} ${item.title}`);
+            bookmarkBtn.setAttribute('aria-pressed', String(isSaved));
+            const bookmarkIcon = createMaterialIcon('bookmark', 'text-[18px]');
+            if (isSaved) {
+                bookmarkIcon.style.fontVariationSettings = "'FILL' 1";
+            }
+            bookmarkBtn.appendChild(bookmarkIcon);
+            bookmarkBtn.addEventListener('click', (event) => toggleSaveItem(itemId, event));
+
+            badgesRow.append(badgeGroup, bookmarkBtn);
+
+            // Title
+            const titleEl = document.createElement('h3');
+            titleEl.className = 'text-title-md font-title-md text-ink-primary font-semibold mb-1 leading-snug';
+            titleEl.textContent = item.title;
+
+            // Date & Location metadata
+            const metaRow = document.createElement('div');
+            metaRow.className = 'flex items-center gap-2 text-caption font-caption text-ink-muted mb-2.5';
+
+            const dateSpan = document.createElement('span');
+            dateSpan.className = 'inline-flex items-center gap-0.5';
+            dateSpan.appendChild(createMaterialIcon('schedule', 'text-[14px] text-ink-faint'));
+            dateSpan.appendChild(document.createTextNode(formatDisplayDate(item.date_reported)));
+
+            const sep = document.createElement('span');
+            sep.setAttribute('aria-hidden', 'true');
+            sep.textContent = '•';
+
+            const locSpan = document.createElement('span');
+            locSpan.className = 'inline-flex items-center gap-0.5 text-ink-secondary';
+            locSpan.appendChild(createMaterialIcon('pin_drop', 'text-[14px] text-rose-500'));
+            locSpan.appendChild(document.createTextNode(item.location));
+
+            metaRow.append(dateSpan, sep, locSpan);
+
+            // Description
+            const descEl = document.createElement('p');
+            descEl.className = 'text-body-sm font-body-sm text-ink-secondary line-clamp-3 mb-1';
+            descEl.textContent = item.description || '';
+
+            body.append(badgesRow, titleEl, metaRow, descEl);
+            topWrap.appendChild(body);
+
+            // Footer
+            const footer = document.createElement('div');
+            footer.className = 'px-4 py-3 bg-canvas-slate/80 border-t border-border-slate flex items-center justify-between gap-2';
+
+            const cleanDigits = String(item.contact_phone || '').replace(/\D/g, '');
+            const waText = `Hey, regarding the ${item.type} item "${item.title}" on Campus Lost & Found...`;
+            const waUrl = `https://wa.me/91${encodeURIComponent(cleanDigits)}?text=${encodeURIComponent(waText)}`;
+
+            const waLink = document.createElement('a');
+            waLink.href = waUrl;
+            waLink.target = '_blank';
+            waLink.rel = 'noopener noreferrer';
+            waLink.className = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-label-sm font-label-sm font-medium bg-[#128C7E] hover:bg-[#075E54] active:scale-[0.98] text-white shadow-xs transition-all';
+            waLink.title = 'Message poster on WhatsApp';
+            waLink.setAttribute('aria-label', `Message poster on WhatsApp about ${item.title}`);
+            waLink.appendChild(createMaterialIcon('chat', 'text-[16px]'));
+            const waLabel = document.createElement('span');
+            waLabel.textContent = 'WhatsApp';
+            waLink.appendChild(waLabel);
+
+            const ownerActions = document.createElement('div');
+            ownerActions.className = 'flex items-center gap-1.5';
+
+            if (isOwner) {
+                if (isResolved) {
+                    const resolvedBadge = document.createElement('span');
+                    resolvedBadge.className = 'px-2.5 py-1 rounded-md text-caption font-caption font-medium border border-border-slate bg-slate-100 text-ink-muted';
+                    resolvedBadge.textContent = 'Resolved';
+                    ownerActions.appendChild(resolvedBadge);
+                } else {
+                    const resolveBtn = document.createElement('button');
+                    resolveBtn.type = 'button';
+                    resolveBtn.className = 'px-2.5 py-1 rounded-md text-caption font-caption font-medium border border-border-slate bg-surface-white hover:bg-slate-100 text-ink-secondary transition-colors cursor-pointer';
+                    resolveBtn.title = 'Mark item as resolved';
+                    resolveBtn.textContent = 'Mark Resolved';
+                    resolveBtn.addEventListener('click', () => resolveItem(itemId));
+                    ownerActions.appendChild(resolveBtn);
+                }
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.type = 'button';
+                deleteBtn.className = 'p-1 rounded-md text-ink-faint hover:text-badge-lost-text hover:bg-rose-50 transition-colors cursor-pointer';
+                deleteBtn.title = 'Delete notice';
+                deleteBtn.setAttribute('aria-label', `Delete notice for ${item.title}`);
+                deleteBtn.appendChild(createMaterialIcon('delete', 'text-[16px]'));
+                deleteBtn.addEventListener('click', () => deleteItem(itemId));
+                ownerActions.appendChild(deleteBtn);
+            } else {
+                const protectedSpan = document.createElement('span');
+                protectedSpan.className = 'text-[11px] text-ink-faint flex items-center gap-0.5';
+                protectedSpan.appendChild(createMaterialIcon('lock', 'text-[12px]'));
+                protectedSpan.appendChild(document.createTextNode('Protected'));
+                ownerActions.appendChild(protectedSpan);
+            }
+
+            footer.append(waLink, ownerActions);
+            card.append(topWrap, footer);
+            return card;
         }
 
         // Render Function
@@ -856,7 +1136,6 @@
                 visibleItems = items.filter(item => savedItems.includes(Number(item.id)));
             }
 
-            // Filter feedback text
             const isFiltered = currentMode !== 'all' || currentCategory !== 'all' || currentLocation !== 'all' || searchQuery.trim() !== '' || viewMode !== 'feed';
             if (isFiltered) {
                 filterStatus.classList.remove('hidden');
@@ -871,176 +1150,46 @@
             }
 
             if (visibleItems.length === 0) {
-                grid.innerHTML = '';
+                grid.replaceChildren();
                 emptyState.classList.remove('hidden');
                 return;
             }
 
             emptyState.classList.add('hidden');
-
-            grid.innerHTML = visibleItems.map(item => {
+            const fragment = document.createDocumentFragment();
+            visibleItems.forEach(item => {
                 const itemId = Number(item.id);
                 const isOwner = Object.prototype.hasOwnProperty.call(myTokens, String(itemId));
                 const isSaved = savedItems.includes(itemId);
-                const isLost = item.type === 'lost';
-                const isResolved = item.status === 'resolved';
+                fragment.appendChild(createItemCard(item, isOwner, isSaved));
+            });
+            grid.replaceChildren(fragment);
+        }
 
-                // WhatsApp link preparation
-                const waText = `Hey, regarding the ${item.type} item "${item.title}" on Campus Lost & Found...`;
-                const waUrl = `https://wa.me/91${encodeURIComponent(item.contact_phone)}?text=${encodeURIComponent(waText)}`;
+        // Accessible Modal Focus Management
+        function getFocusableElements(container) {
+            return Array.from(
+                container.querySelectorAll(
+                    'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+                )
+            ).filter(el => el.offsetParent !== null);
+        }
 
-                // Status badge
-                let badgeHtml = '';
-                if (isResolved) {
-                    badgeHtml = `
-            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-badge font-badge bg-badge-claimed-bg text-badge-claimed-text border border-badge-claimed-border">
-              <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span>
-              RESOLVED / CLAIMED
-            </span>
-          `;
-                } else if (isLost) {
-                    badgeHtml = `
-            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-badge font-badge bg-badge-lost-bg text-badge-lost-text border border-badge-lost-border">
-              <span class="w-1.5 h-1.5 rounded-full bg-badge-lost-text"></span>
-              LOST
-            </span>
-          `;
-                } else {
-                    badgeHtml = `
-            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-badge font-badge bg-badge-found-bg text-badge-found-text border border-badge-found-border">
-              <span class="w-1.5 h-1.5 rounded-full bg-badge-found-text"></span>
-              FOUND
-            </span>
-          `;
-                }
+        function trapDialogFocus(event, container) {
+            if (event.key !== 'Tab') return;
+            const focusables = getFocusableElements(container);
+            if (focusables.length === 0) return;
 
-                // Image Section
-                let imageMarkup = '';
-                if (item.image_filename) {
-                    const imageUrl = `/static/uploads/${encodeURIComponent(item.image_filename)}`;
-                    imageMarkup = `
-            <div class="relative w-full aspect-video bg-slate-100 overflow-hidden cursor-pointer group" onclick="openLightboxById(${itemId})">
-              <img 
-                src="${imageUrl}" 
-                alt="${escapeHtml(item.title)}" 
-                class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-              >
-              <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-2.5">
-                <span class="text-white text-caption font-caption inline-flex items-center gap-1">
-                  <span class="material-symbols-outlined text-[16px]" data-icon="fullscreen">fullscreen</span>
-                  Tap to view photo
-                </span>
-              </div>
-            </div>
-          `;
-                }
+            const first = focusables[0];
+            const last = focusables[focusables.length - 1];
 
-                // Category icon
-                let categoryIcon = 'help_outline';
-                if (item.category.includes('Smart Card')) categoryIcon = 'badge';
-                else if (item.category.includes('Keys')) categoryIcon = 'vpn_key';
-                else if (item.category.includes('Electronics')) categoryIcon = 'headphones';
-                else if (item.category.includes('Stationery')) categoryIcon = 'architecture';
-                else if (item.category.includes('Cycle')) categoryIcon = 'pedal_bike';
-
-                return `
-          <div class="bg-surface-white rounded-xl border border-border-slate shadow-sm hover:border-slate-300 hover:shadow-[0_2px_8px_-2px_rgba(15,23,42,0.08)] transition-all flex flex-col justify-between overflow-hidden relative ${isResolved ? 'opacity-75 bg-slate-50/50' : ''}">
-            
-            <div>
-              ${imageMarkup}
-
-              <div class="p-4">
-                <!-- Badges Row -->
-                <div class="flex items-center justify-between gap-2 mb-2.5">
-                  <div class="flex flex-wrap items-center gap-1.5">
-                    ${badgeHtml}
-                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-caption font-caption bg-surface-white text-ink-muted border border-border-slate">
-                      <span class="material-symbols-outlined text-[12px] text-ink-faint" data-icon="${categoryIcon}">${categoryIcon}</span>
-                      ${escapeHtml(item.category)}
-                    </span>
-                  </div>
-
-                  <!-- Bookmark Action -->
-                  <button onclick="toggleSaveItem(${itemId}, event)" class="p-1 rounded-full text-ink-faint hover:text-primary-container hover:bg-slate-100 transition-colors" title="${isSaved ? 'Unsave' : 'Save'}">
-                    <span class="material-symbols-outlined text-[18px]" ${isSaved ? 'style="font-variation-settings: \'FILL\' 1;"' : ''} data-icon="bookmark">bookmark</span>
-                  </button>
-                </div>
-
-                <!-- Title & Date -->
-                <h3 class="text-title-md font-title-md text-ink-primary font-semibold mb-1 leading-snug">
-                  ${escapeHtml(item.title)}
-                </h3>
-
-                <div class="flex items-center gap-2 text-caption font-caption text-ink-muted mb-2.5">
-                  <span class="inline-flex items-center gap-0.5">
-                    <span class="material-symbols-outlined text-[14px] text-ink-faint" data-icon="schedule">schedule</span>
-                    ${escapeHtml(formatDisplayDate(item.date_reported))}
-                  </span>
-                  <span>•</span>
-                  <span class="inline-flex items-center gap-0.5 text-ink-secondary">
-                    <span class="material-symbols-outlined text-[14px] text-rose-500" data-icon="pin_drop">pin_drop</span>
-                    ${escapeHtml(item.location)}
-                  </span>
-                </div>
-
-                <!-- Description Clues -->
-                <p class="text-body-sm font-body-sm text-ink-secondary line-clamp-3 mb-1">
-                  ${escapeHtml(item.description || '')}
-                </p>
-              </div>
-            </div>
-
-            <!-- Card Action Footer -->
-            <div class="px-4 py-3 bg-canvas-slate/80 border-t border-border-slate flex items-center justify-between gap-2">
-              
-              <!-- WhatsApp Contact (Public Action) -->
-              <a 
-                href="${waUrl}" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-label-sm font-label-sm font-medium bg-[#128C7E] hover:bg-[#075E54] active:scale-[0.98] text-white shadow-xs transition-all"
-                title="Message poster on WhatsApp"
-              >
-                <span class="material-symbols-outlined text-[16px]" data-icon="chat">chat</span>
-                <span>WhatsApp</span>
-              </a>
-
-              <!-- Device-Owner Actions (Conditional via localStorage tokens) -->
-              <div class="flex items-center gap-1.5">
-                ${isOwner ? `
-                  ${isResolved ? `
-                    <span class="px-2.5 py-1 rounded-md text-caption font-caption font-medium border border-border-slate bg-slate-100 text-ink-muted">
-                      Resolved
-                    </span>
-                  ` : `
-                    <button 
-                      onclick="resolveItem(${itemId})" 
-                      class="px-2.5 py-1 rounded-md text-caption font-caption font-medium border border-border-slate bg-surface-white hover:bg-slate-100 text-ink-secondary transition-colors cursor-pointer"
-                      title="Mark item as resolved"
-                    >
-                      Mark Resolved
-                    </button>
-                  `}
-
-                  <button 
-                    onclick="deleteItem(${itemId})" 
-                    class="p-1 rounded-md text-ink-faint hover:text-badge-lost-text hover:bg-rose-50 transition-colors cursor-pointer" 
-                    title="Delete notice"
-                  >
-                    <span class="material-symbols-outlined text-[16px]" data-icon="delete">delete</span>
-                  </button>
-                ` : `
-                  <span class="text-[11px] text-ink-faint flex items-center gap-0.5">
-                    <span class="material-symbols-outlined text-[12px]" data-icon="lock">lock</span>
-                    Protected
-                  </span>
-                `}
-              </div>
-            </div>
-
-          </div>
-        `;
-            }).join('');
+            if (event.shiftKey && document.activeElement === first) {
+                event.preventDefault();
+                last.focus();
+            } else if (!event.shiftKey && document.activeElement === last) {
+                event.preventDefault();
+                first.focus();
+            }
         }
 
         // Modal Interactions
@@ -1058,9 +1207,12 @@
         const removePhotoBtn = document.getElementById('removePhotoBtn');
 
         function openModal() {
+            lastFocusedElement = document.activeElement;
+            activeDialog = reportModal;
             reportModal.classList.remove('hidden');
             setTimeout(() => {
                 reportModal.classList.remove('opacity-0');
+                document.getElementById('itemTitle').focus();
             }, 10);
             document.body.classList.add('overflow-hidden');
         }
@@ -1070,12 +1222,20 @@
             setTimeout(() => {
                 reportModal.classList.add('hidden');
                 document.body.classList.remove('overflow-hidden');
+                if (activeDialog === reportModal) {
+                    activeDialog = null;
+                }
+                if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
+                    lastFocusedElement.focus();
+                    lastFocusedElement = null;
+                }
             }, 200);
         }
 
         function clearPhotoSelection() {
             fileInput.value = '';
             imagePreview.removeAttribute('src');
+            imagePreview.alt = 'Preview of selected item photo';
             previewContainer.classList.add('hidden');
             uploadPrompt.classList.remove('hidden');
         }
@@ -1095,6 +1255,8 @@
             const btnFound = document.getElementById('formTypeFound');
 
             typeInput.value = type;
+            btnLost.setAttribute('aria-pressed', String(type === 'lost'));
+            btnFound.setAttribute('aria-pressed', String(type === 'found'));
 
             if (type === 'lost') {
                 btnLost.className = 'py-2 rounded-md text-label-md font-label-md font-semibold flex items-center justify-center gap-1.5 transition-all bg-badge-lost-bg text-badge-lost-text border border-badge-lost-border shadow-xs';
@@ -1107,18 +1269,38 @@
 
         // Photo Upload Handling
         dropZone.addEventListener('click', () => fileInput.click());
+        dropZone.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                fileInput.click();
+            }
+        });
 
         fileInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    imagePreview.src = event.target.result;
-                    previewContainer.classList.remove('hidden');
-                    uploadPrompt.classList.add('hidden');
-                };
-                reader.readAsDataURL(file);
+            if (!file) return;
+
+            if (file.size > MAX_IMAGE_BYTES) {
+                showToast('Image must be 5 MB or smaller', 'error');
+                clearPhotoSelection();
+                return;
             }
+
+            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+            if (file.type && !allowedTypes.includes(file.type.toLowerCase())) {
+                showToast('Only JPG, PNG, and WebP images are supported', 'error');
+                clearPhotoSelection();
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                imagePreview.src = event.target.result;
+                imagePreview.alt = `Preview of ${file.name}`;
+                previewContainer.classList.remove('hidden');
+                uploadPrompt.classList.add('hidden');
+            };
+            reader.readAsDataURL(file);
         });
 
         removePhotoBtn.addEventListener('click', (e) => {
@@ -1250,6 +1432,8 @@
         const lightboxModal = document.getElementById('lightboxModal');
         const lightboxImg = document.getElementById('lightboxImg');
         const lightboxCaption = document.getElementById('lightboxCaption');
+        const closeLightboxIconBtn = document.getElementById('closeLightboxIconBtn');
+        const closeLightboxTextBtn = document.getElementById('closeLightboxTextBtn');
 
         function openLightboxById(id) {
             const item = items.find(x => Number(x.id) === Number(id));
@@ -1258,12 +1442,17 @@
         }
 
         function openLightbox(src, caption) {
+            lastFocusedElement = document.activeElement;
+            activeDialog = lightboxModal;
             lightboxImg.src = src;
+            lightboxImg.alt = `Enlarged photo of ${caption}`;
             lightboxCaption.textContent = caption;
             lightboxModal.classList.remove('hidden');
             setTimeout(() => {
                 lightboxModal.classList.remove('opacity-0');
+                closeLightboxIconBtn.focus();
             }, 10);
+            document.body.classList.add('overflow-hidden');
         }
 
         function closeLightbox() {
@@ -1271,33 +1460,77 @@
             setTimeout(() => {
                 lightboxModal.classList.add('hidden');
                 lightboxImg.removeAttribute('src');
+                lightboxImg.alt = 'Enlarged item photo preview';
+                document.body.classList.remove('overflow-hidden');
+                if (activeDialog === lightboxModal) {
+                    activeDialog = null;
+                }
+                if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
+                    lastFocusedElement.focus();
+                    lastFocusedElement = null;
+                }
             }, 200);
         }
 
+        closeLightboxIconBtn.addEventListener('click', closeLightbox);
+        closeLightboxTextBtn.addEventListener('click', closeLightbox);
         lightboxModal.addEventListener('click', (e) => {
             if (e.target === lightboxModal) closeLightbox();
         });
 
-        // Live Search Wiring (debounced)
+        // Keyboard accessibility: Escape closes active modal, Tab traps focus within active modal
+        document.addEventListener('keydown', (e) => {
+            if (!activeDialog) return;
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                if (activeDialog === reportModal) {
+                    closeModal();
+                } else if (activeDialog === lightboxModal) {
+                    closeLightbox();
+                }
+                return;
+            }
+            trapDialogFocus(e, activeDialog);
+        });
+
+        // Live Search & Filter Event Wiring
         const searchInput = document.getElementById('searchInput');
         const clearSearchBtn = document.getElementById('clearSearchBtn');
 
         searchInput.addEventListener('input', (e) => {
             searchQuery = e.target.value;
             clearSearchBtn.classList.toggle('hidden', searchQuery.length === 0);
-            clearTimeout(searchDebounceTimer);
-            searchDebounceTimer = setTimeout(() => {
-                loadItems();
-            }, 300);
+            scheduleLoadItems(DEBOUNCE_DELAY_MS);
         });
 
         clearSearchBtn.addEventListener('click', () => {
-            clearTimeout(searchDebounceTimer);
+            clearTimeout(filterDebounceTimer);
             searchInput.value = '';
             searchQuery = '';
             clearSearchBtn.classList.add('hidden');
             loadItems();
         });
+
+        document.getElementById('tabLost').addEventListener('click', () => setMode('lost'));
+        document.getElementById('tabFound').addEventListener('click', () => setMode('found'));
+        document.getElementById('tabAll').addEventListener('click', () => setMode('all'));
+
+        document.querySelectorAll('.cat-pill').forEach(btn => {
+            btn.addEventListener('click', () => setCategory(btn.dataset.cat));
+        });
+        document.querySelectorAll('.loc-pill').forEach(btn => {
+            btn.addEventListener('click', () => setLocation(btn.dataset.loc));
+        });
+
+        document.getElementById('resetFiltersStatusBtn').addEventListener('click', resetFilters);
+        document.getElementById('clearAllFiltersBtn').addEventListener('click', resetFilters);
+        document.getElementById('bottomNavFeed').addEventListener('click', () => setTab('feed'));
+        document.getElementById('bottomNavSearch').addEventListener('click', focusSearch);
+        document.getElementById('bottomNavMyPosts').addEventListener('click', toggleMyPostsView);
+        document.getElementById('bottomNavSaved').addEventListener('click', toggleSavedView);
+        document.getElementById('formTypeLost').addEventListener('click', () => setFormType('lost'));
+        document.getElementById('formTypeFound').addEventListener('click', () => setFormType('found'));
+        document.getElementById('hideToastBtn').addEventListener('click', hideToast);
 
         // Toast System
         let toastTimeout;
@@ -1326,17 +1559,6 @@
             const toast = document.getElementById('toast');
             toast.classList.remove('translate-y-0', 'opacity-100');
             toast.classList.add('translate-y-24', 'opacity-0');
-        }
-
-        // Helper: Escaping HTML
-        function escapeHtml(text) {
-            if (!text) return '';
-            return String(text)
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
         }
 
         // Initial Launch

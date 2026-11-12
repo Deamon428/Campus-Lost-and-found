@@ -1,11 +1,13 @@
+"""FastAPI application and HTTP routing for Campus Lost & Found."""
+
 from __future__ import annotations
 
+from collections.abc import AsyncIterator, Awaitable, Callable
 from contextlib import asynccontextmanager
-from datetime import date
+import hmac
 import logging
 import os
 from pathlib import Path
-import re
 import secrets
 import sqlite3
 from typing import Annotated, Optional
@@ -19,19 +21,28 @@ from fastapi import (
     Header,
     HTTPException,
     Query,
+    Request,
+    Response,
     UploadFile,
     status as http_status,
 )
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
+from pydantic import ValidationError
+from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from models import (
-    VALID_CATEGORIES,
-    VALID_LOCATIONS,
-    VALID_TYPES,
-    get_db,
-    init_db,
+import models
+from models import get_db, init_db
+from schemas import (
+    ActionResponse,
+    ErrorDetail,
+    ErrorResponse,
+    ItemCreate,
+    ItemCreateResponse,
+    ItemFilterQuery,
+    ItemResponse,
 )
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -39,16 +50,37 @@ STATIC_DIR = BASE_DIR / "static"
 UPLOAD_DIR = STATIC_DIR / "uploads"
 
 ALLOWED_IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"}
+ALLOWED_IMAGE_MIME_BY_EXT: dict[str, set[str]] = {
+    ".jpg": {"image/jpeg", "image/jpg"},
+    ".jpeg": {"image/jpeg", "image/jpg"},
+    ".png": {"image/png"},
+    ".webp": {"image/webp"},
+}
+MAX_UPLOAD_BYTES = 5 * 1024 * 1024  # 5 MB
 UPLOAD_CHUNK_SIZE = 64 * 1024  # 64 KiB
-logger = logging.getLogger(__name__)
+
+
+def _configure_logging() -> logging.Logger:
+    """Configure structured logging once for the application process."""
+    if not logging.getLogger().handlers:
+        logging.basicConfig(
+            level=logging.INFO,
+            format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
+        )
+    return logging.getLogger("campus_lost_found")
+
+
+logger = _configure_logging()
 
 
 @asynccontextmanager
-async def lifespan(_: FastAPI):
-    """Initialize required directories and database schema on startup."""
+async def lifespan(_: FastAPI) -> AsyncIterator[None]:
+    """Initialize upload storage and SQLite schema on startup."""
     os.makedirs(UPLOAD_DIR, exist_ok=True)
     init_db()
+    logger.info("Campus Lost & Found startup complete (uploads=%s)", UPLOAD_DIR)
     yield
+    logger.info("Campus Lost & Found shutdown complete")
 
 
 app = FastAPI(title="Campus Lost & Found API", lifespan=lifespan)
@@ -60,6 +92,115 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+@app.middleware("http")
+async def add_security_headers(
+    request: Request,
+    call_next: Callable[[Request], Awaitable[Response]],
+) -> Response:
+    """Attach defensive HTTP security headers to all outgoing responses."""
+    response = await call_next(request)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    return response
+
+
+def _build_error_response(
+    status_code: int,
+    code: str,
+    message: str,
+    errors: Optional[list[dict[str, object]]] = None,
+) -> JSONResponse:
+    """Build a consistent JSON error envelope while preserving top-level 'detail'."""
+    payload = ErrorResponse(
+        detail=message,
+        error=ErrorDetail(code=code, message=message, errors=errors),
+    )
+    return JSONResponse(status_code=status_code, content=payload.model_dump())
+
+
+@app.exception_handler(StarletteHTTPException)
+async def http_exception_handler(
+    request: Request, exc: StarletteHTTPException
+) -> JSONResponse:
+    """Normalize HTTP exceptions into the centralized JSON error envelope."""
+    detail = str(exc.detail) if exc.detail else "Request failed"
+    logger.warning(
+        "HTTP %s on %s %s: %s",
+        exc.status_code,
+        request.method,
+        request.url.path,
+        detail,
+    )
+    return _build_error_response(exc.status_code, "HTTP_ERROR", detail)
+
+
+@app.exception_handler(RequestValidationError)
+async def request_validation_exception_handler(
+    request: Request, exc: RequestValidationError
+) -> JSONResponse:
+    """Format FastAPI request validation errors into the JSON error envelope."""
+    sanitized_errors = [
+        {k: v for k, v in err.items() if k != "ctx"} for err in exc.errors()
+    ]
+    first_msg = (
+        sanitized_errors[0].get("msg", "Validation error")
+        if sanitized_errors
+        else "Validation error"
+    )
+    logger.warning(
+        "Request validation error on %s %s: %s",
+        request.method,
+        request.url.path,
+        first_msg,
+    )
+    return _build_error_response(
+        http_status.HTTP_422_UNPROCESSABLE_CONTENT,
+        "VALIDATION_ERROR",
+        first_msg,
+        errors=sanitized_errors,
+    )
+
+
+@app.exception_handler(ValidationError)
+async def pydantic_validation_exception_handler(
+    request: Request, exc: ValidationError
+) -> JSONResponse:
+    """Format Pydantic model validation errors into the JSON error envelope."""
+    sanitized_errors = exc.errors(include_url=False, include_context=False)
+    first_msg = (
+        sanitized_errors[0].get("msg", "Validation error")
+        if sanitized_errors
+        else "Validation error"
+    )
+    logger.warning(
+        "Payload validation error on %s %s: %s",
+        request.method,
+        request.url.path,
+        first_msg,
+    )
+    return _build_error_response(
+        http_status.HTTP_422_UNPROCESSABLE_CONTENT,
+        "VALIDATION_ERROR",
+        first_msg,
+        errors=sanitized_errors,
+    )
+
+
+@app.exception_handler(Exception)
+async def unhandled_exception_handler(request: Request, exc: Exception) -> JSONResponse:
+    """Catch unexpected errors without leaking stack traces to clients."""
+    logger.exception(
+        "Unhandled server error on %s %s", request.method, request.url.path
+    )
+    return _build_error_response(
+        http_status.HTTP_500_INTERNAL_SERVER_ERROR,
+        "INTERNAL_ERROR",
+        "Internal server error",
+    )
+
+
 os.makedirs(STATIC_DIR, exist_ok=True)
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
@@ -70,67 +211,8 @@ def serve_frontend() -> FileResponse:
     return FileResponse(STATIC_DIR / "index.html")
 
 
-def _validate_choice(
-    value: str,
-    allowed: tuple[str, ...],
-    field_name: str,
-    *,
-    lowercase: bool = False,
-) -> str:
-    """Normalize a string field and verify it matches one of the allowed values."""
-    normalized = value.strip()
-    if lowercase:
-        normalized = normalized.lower()
-    if normalized not in allowed:
-        raise HTTPException(
-            status_code=http_status.HTTP_400_BAD_REQUEST,
-            detail=f"Invalid {field_name}. Must be one of: {', '.join(allowed)}.",
-        )
-    return normalized
-
-
-def _validate_title(value: str) -> str:
-    """Trim whitespace and enforce minimum title length."""
-    cleaned = value.strip()
-    if len(cleaned) < 3:
-        raise HTTPException(
-            status_code=http_status.HTTP_400_BAD_REQUEST,
-            detail="Title must be at least 3 characters long.",
-        )
-    return cleaned
-
-
-def _validate_date_reported(value: str) -> str:
-    """Ensure date_reported is a valid calendar date in YYYY-MM-DD format."""
-    cleaned = value.strip()
-    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", cleaned):
-        raise HTTPException(
-            status_code=http_status.HTTP_400_BAD_REQUEST,
-            detail="date_reported must be in YYYY-MM-DD format.",
-        )
-    try:
-        date.fromisoformat(cleaned)
-    except ValueError as exc:
-        raise HTTPException(
-            status_code=http_status.HTTP_400_BAD_REQUEST,
-            detail="date_reported is not a valid calendar date.",
-        ) from exc
-    return cleaned
-
-
-def _validate_contact_phone(value: str) -> str:
-    """Strip non-digits and validate a 10-digit mobile number starting with 6-9."""
-    digits = re.sub(r"\D", "", value)
-    if not re.fullmatch(r"[6-9]\d{9}", digits):
-        raise HTTPException(
-            status_code=http_status.HTTP_400_BAD_REQUEST,
-            detail="contact_phone must contain 10 digits starting with 6-9.",
-        )
-    return digits
-
-
 async def _save_upload_image(image: UploadFile) -> str:
-    """Validate extension and stream an uploaded image to static/uploads."""
+    """Validate extension, MIME type, and 5 MB max size before saving upload."""
     ext = Path(image.filename or "").suffix.lower()
     if ext not in ALLOWED_IMAGE_EXTENSIONS:
         await image.close()
@@ -139,14 +221,39 @@ async def _save_upload_image(image: UploadFile) -> str:
             detail="Invalid image extension. Allowed: .jpg, .jpeg, .png, .webp.",
         )
 
+    raw_content_type = (image.content_type or "").split(";", 1)[0].strip().lower()
+    allowed_mimes = ALLOWED_IMAGE_MIME_BY_EXT[ext]
+    if raw_content_type not in allowed_mimes:
+        await image.close()
+        raise HTTPException(
+            status_code=http_status.HTTP_400_BAD_REQUEST,
+            detail=(
+                f"Invalid image MIME type '{raw_content_type or 'unknown'}' "
+                f"for {ext} upload."
+            ),
+        )
+
     os.makedirs(UPLOAD_DIR, exist_ok=True)
     filename = f"{uuid4().hex}{ext}"
     destination = UPLOAD_DIR / filename
+    total_bytes = 0
 
     try:
         with open(destination, "wb") as out_file:
             while chunk := await image.read(UPLOAD_CHUNK_SIZE):
+                total_bytes += len(chunk)
+                if total_bytes > MAX_UPLOAD_BYTES:
+                    raise HTTPException(
+                        status_code=http_status.HTTP_413_CONTENT_TOO_LARGE,
+                        detail="Image size exceeds the 5 MB limit.",
+                    )
                 out_file.write(chunk)
+
+        if total_bytes == 0:
+            raise HTTPException(
+                status_code=http_status.HTTP_400_BAD_REQUEST,
+                detail="Uploaded image file cannot be empty.",
+            )
     except Exception:
         destination.unlink(missing_ok=True)
         raise
@@ -156,13 +263,38 @@ async def _save_upload_image(image: UploadFile) -> str:
     return filename
 
 
-def _escape_like_term(term: str) -> str:
-    """Escape SQL LIKE wildcard characters so search behaves as a literal substring."""
-    return term.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+def _get_authorized_item(
+    db: sqlite3.Connection,
+    item_id: int,
+    x_manage_token: Optional[str],
+    token: Optional[str],
+) -> sqlite3.Row:
+    """Fetch an item by ID and verify the caller's manage token in constant time."""
+    item = models.get_item_for_auth(db, item_id)
+    if item is None:
+        raise HTTPException(
+            status_code=http_status.HTTP_404_NOT_FOUND,
+            detail="Item not found",
+        )
+
+    provided_token = (x_manage_token or "").strip() or (token or "").strip()
+    if not provided_token or not hmac.compare_digest(
+        provided_token, item["manage_token"]
+    ):
+        logger.warning("Unauthorized management attempt for item_id=%s", item_id)
+        raise HTTPException(
+            status_code=http_status.HTTP_403_FORBIDDEN,
+            detail="Forbidden: Invalid manage token",
+        )
+    return item
 
 
-@app.post("/api/items", status_code=http_status.HTTP_201_CREATED)
-async def create_item(
+@app.post(
+    "/api/items",
+    status_code=http_status.HTTP_201_CREATED,
+    response_model=ItemCreateResponse,
+)
+async def create_item_endpoint(
     type: Annotated[str, Form(...)],
     title: Annotated[str, Form(...)],
     category: Annotated[str, Form(...)],
@@ -172,15 +304,17 @@ async def create_item(
     description: Annotated[Optional[str], Form()] = None,
     image: Optional[UploadFile] = File(default=None),
     db: sqlite3.Connection = Depends(get_db),
-) -> dict[str, object]:
-    """Validate and store a new lost or found item report."""
-    clean_type = _validate_choice(type, VALID_TYPES, "type", lowercase=True)
-    clean_title = _validate_title(title)
-    clean_category = _validate_choice(category, VALID_CATEGORIES, "category")
-    clean_location = _validate_choice(location, VALID_LOCATIONS, "location")
-    clean_date = _validate_date_reported(date_reported)
-    clean_phone = _validate_contact_phone(contact_phone)
-    clean_description = description.strip() or None if description is not None else None
+) -> ItemCreateResponse:
+    """Validate and store a new lost or found campus item report."""
+    payload = ItemCreate(
+        type=type,
+        title=title,
+        category=category,
+        location=location,
+        date_reported=date_reported,
+        contact_phone=contact_phone,
+        description=description,
+    )
 
     image_filename: Optional[str] = None
     if image is not None:
@@ -192,157 +326,82 @@ async def create_item(
     manage_token = secrets.token_hex(6)
 
     try:
-        cursor = db.execute(
-            """
-            INSERT INTO items (
-                type,
-                title,
-                category,
-                location,
-                date_reported,
-                description,
-                image_filename,
-                contact_phone,
-                status,
-                manage_token
-            )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'open', ?)
-            """,
-            (
-                clean_type,
-                clean_title,
-                clean_category,
-                clean_location,
-                clean_date,
-                clean_description,
-                image_filename,
-                clean_phone,
-                manage_token,
-            ),
+        new_id = models.create_item(
+            db,
+            item_type=payload.type,
+            title=payload.title,
+            category=payload.category,
+            location=payload.location,
+            date_reported=payload.date_reported,
+            description=payload.description,
+            image_filename=image_filename,
+            contact_phone=payload.contact_phone,
+            manage_token=manage_token,
         )
-        db.commit()
     except Exception:
         if image_filename is not None:
             (UPLOAD_DIR / image_filename).unlink(missing_ok=True)
         raise
 
-    return {
-        "status": "success",
-        "item_id": cursor.lastrowid,
-        "manage_token": manage_token,
-    }
+    logger.info(
+        "Created item_id=%s type=%s category=%s location=%s",
+        new_id,
+        payload.type,
+        payload.category,
+        payload.location,
+    )
+    return ItemCreateResponse(item_id=new_id, manage_token=manage_token)
 
 
-@app.get("/api/items")
-def list_items(
+@app.get("/api/items", response_model=list[ItemResponse])
+def list_items_endpoint(
     type: Annotated[Optional[str], Query()] = None,
     category: Annotated[Optional[str], Query()] = None,
     location: Annotated[Optional[str], Query()] = None,
     status: Annotated[str, Query()] = "open",
     search: Annotated[Optional[str], Query()] = None,
     db: sqlite3.Connection = Depends(get_db),
-) -> list[dict[str, object]]:
+) -> list[ItemResponse]:
     """Return filtered lost/found items ordered newest-first without manage_token."""
-    conditions: list[str] = []
-    params: list[str] = []
-
-    if type and type.strip():
-        conditions.append("type = ?")
-        params.append(type.strip().lower())
-
-    if category and category.strip():
-        conditions.append("category = ?")
-        params.append(category.strip())
-
-    if location and location.strip():
-        conditions.append("location = ?")
-        params.append(location.strip())
-
-    clean_status = status.strip().lower() if status else "open"
-    if clean_status and clean_status != "all":
-        conditions.append("status = ?")
-        params.append(clean_status)
-
-    if search and search.strip():
-        pattern = f"%{_escape_like_term(search.strip())}%"
-        conditions.append(
-            "(LOWER(title) LIKE LOWER(?) ESCAPE '\\' "
-            "OR LOWER(COALESCE(description, '')) LIKE LOWER(?) ESCAPE '\\')"
-        )
-        params.extend([pattern, pattern])
-
-    where_clause = f"WHERE {' AND '.join(conditions)}" if conditions else ""
-    query = f"""
-        SELECT
-            id,
-            type,
-            title,
-            category,
-            location,
-            date_reported,
-            description,
-            image_filename,
-            contact_phone,
-            status,
-            created_at
-        FROM items
-        {where_clause}
-        ORDER BY id DESC
-    """
-
-    rows = db.execute(query, params).fetchall()
-    return [dict(row) for row in rows]
+    filters = ItemFilterQuery(
+        type=type,
+        category=category,
+        location=location,
+        status=status,
+        search=search,
+    )
+    rows = models.list_items(
+        db,
+        item_type=filters.type,
+        category=filters.category,
+        location=filters.location,
+        status=filters.status,
+        search=filters.search,
+    )
+    return [ItemResponse.model_validate(row) for row in rows]
 
 
-def _get_authorized_item(
-    db: sqlite3.Connection,
-    item_id: int,
-    x_manage_token: Optional[str],
-    token: Optional[str],
-) -> sqlite3.Row:
-    """Fetch an item by ID and verify the provided manage token."""
-    item = db.execute(
-        "SELECT id, status, image_filename, manage_token FROM items WHERE id = ?",
-        (item_id,),
-    ).fetchone()
-    if item is None:
-        raise HTTPException(
-            status_code=http_status.HTTP_404_NOT_FOUND,
-            detail="Item not found",
-        )
-
-    provided_token = (x_manage_token or "").strip() or (token or "").strip()
-    if not provided_token or not secrets.compare_digest(
-        provided_token, item["manage_token"]
-    ):
-        raise HTTPException(
-            status_code=http_status.HTTP_403_FORBIDDEN,
-            detail="Forbidden: Invalid manage token",
-        )
-    return item
-
-
-@app.patch("/api/items/{item_id}/resolve")
-def resolve_item(
+@app.patch("/api/items/{item_id}/resolve", response_model=ActionResponse)
+def resolve_item_endpoint(
     item_id: int,
     x_manage_token: Annotated[Optional[str], Header(alias="X-Manage-Token")] = None,
     token: Annotated[Optional[str], Query()] = None,
     db: sqlite3.Connection = Depends(get_db),
-) -> dict[str, str]:
+) -> ActionResponse:
     """Mark an item as resolved after authenticating with manage_token."""
     _get_authorized_item(db, item_id, x_manage_token, token)
-    db.execute("UPDATE items SET status = 'resolved' WHERE id = ?", (item_id,))
-    db.commit()
-    return {"status": "success", "message": "Item marked as resolved"}
+    models.mark_item_resolved(db, item_id)
+    logger.info("Marked item_id=%s as resolved", item_id)
+    return ActionResponse(message="Item marked as resolved")
 
 
-@app.delete("/api/items/{item_id}")
-def delete_item(
+@app.delete("/api/items/{item_id}", response_model=ActionResponse)
+def delete_item_endpoint(
     item_id: int,
     x_manage_token: Annotated[Optional[str], Header(alias="X-Manage-Token")] = None,
     token: Annotated[Optional[str], Query()] = None,
     db: sqlite3.Connection = Depends(get_db),
-) -> dict[str, str]:
+) -> ActionResponse:
     """Delete an item and any associated uploaded image after verifying manage_token."""
     item = _get_authorized_item(db, item_id, x_manage_token, token)
 
@@ -355,6 +414,6 @@ def delete_item(
             except OSError as exc:
                 logger.warning("Failed to remove upload %s: %s", image_path, exc)
 
-    db.execute("DELETE FROM items WHERE id = ?", (item_id,))
-    db.commit()
-    return {"status": "success", "message": "Item deleted successfully"}
+    models.delete_item_by_id(db, item_id)
+    logger.info("Deleted item_id=%s", item_id)
+    return ActionResponse(message="Item deleted successfully")
